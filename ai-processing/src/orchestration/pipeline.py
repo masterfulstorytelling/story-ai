@@ -18,22 +18,54 @@ from src.utils.logger import get_logger
 logger = get_logger(__name__)
 
 
+class CriticalFailureError(Exception):
+    """
+    Exception raised for critical failures that require fail-fast behavior.
+
+    Critical failures include:
+    - Audience identification failures (cannot proceed without audiences)
+    - Citation validation failures (cannot generate report without validated citations)
+    - Ingestion failures (inaccessible content, insufficient content)
+
+    These failures should stop processing immediately and notify the user.
+    """
+
+    pass
+
+
 def audience_identification_node(state: AgentPipelineState) -> Dict[str, Any]:
-    """Identify audiences from content."""
+    """
+    Identify audiences from content.
+
+    CRITICAL: This is a critical agent. Failures must fail fast.
+    """
     try:
         result = identify_audiences(state["content"], state.get("user_provided_audience"))
         audiences = result.get("audiences", [])
         logger.info("Audience identification completed", {"audience_count": len(audiences)})
+
+        # Validate that audiences were identified
+        if not audiences or len(audiences) == 0:
+            error_msg = (
+                "Audience identification failed: No audiences could be identified from content. "
+                "Please ensure your content contains clear information about your target audiences."
+            )
+            logger.error("Critical failure: No audiences identified")
+            raise CriticalFailureError(error_msg)
+
         return {
             "audiences": audiences,
             "agent_outputs": {"audience_identification": result},
         }
+    except CriticalFailureError:
+        # Re-raise critical failures
+        raise
     except Exception as e:
-        logger.error("Error in audience identification", error=e)
-        return {
-            "status": "failed",
-            "error_message": f"Audience identification failed: {str(e)}",
-        }
+        logger.error("Critical failure in audience identification", error=e)
+        raise CriticalFailureError(
+            f"Audience identification failed: {str(e)}. "
+            "This is a critical failure and processing cannot continue."
+        ) from e
 
 
 def clarity_evaluation_node(state: AgentPipelineState) -> Dict[str, Any]:
@@ -104,16 +136,31 @@ def vividness_node(state: AgentPipelineState) -> Dict[str, Any]:
 
 
 def citation_validation_node(state: AgentPipelineState) -> Dict[str, Any]:
-    """Validate all citations."""
+    """
+    Validate all citations.
+
+    CRITICAL: This is a critical agent. Failures must fail fast.
+    """
     try:
         result = validate_citations(state["agent_outputs"], state["content"])
+        validated_citations = result.get("validated_citations", [])
+
+        # Note: Citation validation failure doesn't necessarily mean we should fail
+        # if there are no citations to validate. But if validation itself fails
+        # (e.g., cannot access source material), that's critical.
         return {
-            "validated_citations": result.get("validated_citations", []),
+            "validated_citations": validated_citations,
             "agent_outputs": {"citation_validation_agent": result},
         }
+    except CriticalFailureError:
+        # Re-raise critical failures
+        raise
     except Exception as e:
-        logger.warning(f"Error validating citations: {e}")
-        return {}
+        logger.error("Critical failure in citation validation", error=e)
+        raise CriticalFailureError(
+            f"Citation validation failed: {str(e)}. "
+            "This is a critical failure and processing cannot continue."
+        ) from e
 
 
 def synthesis_node(state: AgentPipelineState) -> Dict[str, Any]:
@@ -196,6 +243,13 @@ def process_evaluation(
 
     try:
         final_state = pipeline.invoke(initial_state, config)
+
+        # Check for critical failures in final state
+        if final_state.get("status") == "failed":
+            error_message = final_state.get("error_message", "Unknown error")
+            logger.error("Pipeline completed with failed status", {"error": error_message})
+            raise CriticalFailureError(f"Pipeline failed: {error_message}")
+
         agent_outputs = final_state.get("agent_outputs", {})
         report = final_state.get("report", {})
         return {
@@ -210,12 +264,11 @@ def process_evaluation(
             "report_content": report.get("report_content") if isinstance(report, dict) else None,
             "pdf_content": report.get("pdf_content") if isinstance(report, dict) else None,
         }
+    except CriticalFailureError:
+        # Re-raise critical failures - these should fail fast
+        logger.error("Critical failure in pipeline execution - failing fast")
+        raise
     except Exception as e:
         logger.error("Pipeline execution failed", error=e)
-        return {
-            "audiences": [],
-            "assessments": {},
-            "report": None,
-            "status": "failed",
-            "error": str(e),
-        }
+        # For unexpected errors, treat as critical failure
+        raise CriticalFailureError(f"Pipeline execution failed: {str(e)}") from e
