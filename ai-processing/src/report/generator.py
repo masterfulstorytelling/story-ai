@@ -2,7 +2,7 @@
 
 from typing import Dict, Any, Optional
 from pathlib import Path
-from weasyprint import HTML, CSS
+from weasyprint import HTML
 from weasyprint.text.fonts import FontConfiguration
 
 from src.utils.logger import get_logger
@@ -109,10 +109,13 @@ def _render_template(template: str, data: Dict[str, Any]) -> str:
             citations_html += "</div>"
         html = html.replace("{% for citation in citations %}", "")
         html = html.replace("{% endfor %}", "")
-        html = html.replace(
-            '<div class="citation">\n            <strong>Quote:</strong> "{{ citation.quote }}"<br>\n            <strong>Source:</strong> {{ citation.source }}<br>\n            {% if citation.location %}\n            <strong>Location:</strong> {{ citation.location }}\n            {% endif %}\n        </div>',
-            citations_html,
+        citation_template = (
+            '<div class="citation">\n            <strong>Quote:</strong> '
+            '"{{ citation.quote }}"<br>\n            <strong>Source:</strong> '
+            "{{ citation.source }}<br>\n            {% if citation.location %}\n            "
+            "<strong>Location:</strong> {{ citation.location }}\n            {% endif %}\n        </div>"
         )
+        html = html.replace(citation_template, citations_html)
     else:
         html = _remove_section(html, "citations")
 
