@@ -34,3 +34,6 @@ class AgentPipelineState(TypedDict):
     submission_id: str
     status: str  # pending, processing, completed, failed
     error_message: Optional[str]
+
+    # Non-critical agent failures (for partial results tracking)
+    failed_agents: List[str]  # List of agent names that failed

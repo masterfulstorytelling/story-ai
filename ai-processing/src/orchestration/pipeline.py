@@ -1,5 +1,6 @@
 """Agent pipeline orchestration using LangGraph."""
 
+from datetime import datetime
 from typing import Dict, Any, Optional
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
@@ -69,70 +70,150 @@ def audience_identification_node(state: AgentPipelineState) -> Dict[str, Any]:
 
 
 def clarity_evaluation_node(state: AgentPipelineState) -> Dict[str, Any]:
-    """Evaluate clarity for all audiences (can run in parallel)."""
+    """
+    Evaluate clarity for all audiences (can run in parallel).
+
+    NON-CRITICAL: Failures are tracked but processing continues with partial results.
+    """
     clarity_outputs = []
+    failed_audiences = []
     for audience in state.get("audiences", []):
         try:
             result = evaluate_clarity(audience, state["content"])
             clarity_outputs.append(result)
         except Exception as e:
-            logger.warning(f"Error evaluating clarity for audience {audience.get('id')}: {e}")
+            audience_id = audience.get("id", "unknown")
+            logger.warning(
+                f"Error evaluating clarity for audience {audience_id}: {e}",
+                {"audience_id": audience_id, "error": str(e)},
+            )
+            failed_audiences.append(audience_id)
             # Continue with other audiences
+
+    # Track failures if any occurred
+    failed_agents = state.get("failed_agents", [])
+    if failed_audiences:
+        if "clarity_agent" not in failed_agents:
+            failed_agents = failed_agents + ["clarity_agent"]
+
     return {
         "agent_outputs": {"clarity_agent": clarity_outputs},
+        "failed_agents": failed_agents,
     }
 
 
 def technical_level_node(state: AgentPipelineState) -> Dict[str, Any]:
-    """Evaluate technical level for all audiences."""
+    """
+    Evaluate technical level for all audiences.
+
+    NON-CRITICAL: Failures are tracked but processing continues with partial results.
+    """
     technical_outputs = []
+    failed_audiences = []
     for audience in state.get("audiences", []):
         try:
             result = evaluate_technical_level(audience, state["content"])
             technical_outputs.append(result)
         except Exception as e:
-            logger.warning(f"Error evaluating technical level: {e}")
+            audience_id = audience.get("id", "unknown")
+            logger.warning(
+                f"Error evaluating technical level for audience {audience_id}: {e}",
+                {"audience_id": audience_id, "error": str(e)},
+            )
+            failed_audiences.append(audience_id)
+            # Continue with other audiences
+
+    # Track failures if any occurred
+    failed_agents = state.get("failed_agents", [])
+    if failed_audiences:
+        if "technical_level_agent" not in failed_agents:
+            failed_agents = failed_agents + ["technical_level_agent"]
+
     return {
         "agent_outputs": {"technical_level_agent": technical_outputs},
+        "failed_agents": failed_agents,
     }
 
 
 def importance_node(state: AgentPipelineState) -> Dict[str, Any]:
-    """Evaluate importance for all audiences."""
+    """
+    Evaluate importance for all audiences.
+
+    NON-CRITICAL: Failures are tracked but processing continues with partial results.
+    """
     importance_outputs = []
+    failed_audiences = []
     for audience in state.get("audiences", []):
         try:
             result = evaluate_importance(audience, state["content"])
             importance_outputs.append(result)
         except Exception as e:
-            logger.warning(f"Error evaluating importance: {e}")
+            audience_id = audience.get("id", "unknown")
+            logger.warning(
+                f"Error evaluating importance for audience {audience_id}: {e}",
+                {"audience_id": audience_id, "error": str(e)},
+            )
+            failed_audiences.append(audience_id)
+            # Continue with other audiences
+
+    # Track failures if any occurred
+    failed_agents = state.get("failed_agents", [])
+    if failed_audiences:
+        if "importance_agent" not in failed_agents:
+            failed_agents = failed_agents + ["importance_agent"]
+
     return {
         "agent_outputs": {"importance_agent": importance_outputs},
+        "failed_agents": failed_agents,
     }
 
 
 def voice_node(state: AgentPipelineState) -> Dict[str, Any]:
-    """Evaluate voice and personality."""
+    """
+    Evaluate voice and personality.
+
+    NON-CRITICAL: Failures are tracked but processing continues with partial results.
+    """
+    failed_agents = state.get("failed_agents", [])
     try:
         result = evaluate_voice(state["content"])
         return {
             "agent_outputs": {"voice_agent": result},
+            "failed_agents": failed_agents,
         }
     except Exception as e:
-        logger.warning(f"Error evaluating voice: {e}")
-        return {}
+        logger.warning(f"Error evaluating voice: {e}", {"error": str(e)})
+        # Track failure but continue processing
+        if "voice_agent" not in failed_agents:
+            failed_agents = failed_agents + ["voice_agent"]
+        return {
+            "agent_outputs": {},
+            "failed_agents": failed_agents,
+        }
 
 
 def vividness_node(state: AgentPipelineState) -> Dict[str, Any]:
-    """Evaluate vividness and storytelling."""
+    """
+    Evaluate vividness and storytelling.
+
+    NON-CRITICAL: Failures are tracked but processing continues with partial results.
+    """
+    failed_agents = state.get("failed_agents", [])
     try:
         result = evaluate_vividness(state["content"])
         return {
             "agent_outputs": {"vividness_agent": result},
+            "failed_agents": failed_agents,
         }
     except Exception as e:
-        logger.warning(f"Error evaluating vividness: {e}")
-        return {}
+        logger.warning(f"Error evaluating vividness: {e}", {"error": str(e)})
+        # Track failure but continue processing
+        if "vividness_agent" not in failed_agents:
+            failed_agents = failed_agents + ["vividness_agent"]
+        return {
+            "agent_outputs": {},
+            "failed_agents": failed_agents,
+        }
 
 
 def citation_validation_node(state: AgentPipelineState) -> Dict[str, Any]:
@@ -164,19 +245,48 @@ def citation_validation_node(state: AgentPipelineState) -> Dict[str, Any]:
 
 
 def synthesis_node(state: AgentPipelineState) -> Dict[str, Any]:
-    """Generate final report."""
+    """
+    Generate final report.
+
+    NON-CRITICAL: Can handle partial results and note limitations.
+    Processing continues even if some agents failed.
+    """
+    failed_agents = state.get("failed_agents", [])
+    agent_outputs = state.get("agent_outputs", {})
+
     try:
-        result = generate_report(state["agent_outputs"])
-        logger.info("Report generation completed")
+        # Pass failed agents info to synthesis agent so it can note limitations
+        result = generate_report(agent_outputs, failed_agents=failed_agents)
+        logger.info(
+            "Report generation completed",
+            {
+                "failed_agents_count": len(failed_agents),
+                "has_failed_agents": len(failed_agents) > 0,
+            },
+        )
         return {
             "report": result,
             "status": "completed",
         }
     except Exception as e:
         logger.error("Error generating report", error=e)
+        # Even if synthesis fails, we don't want to fail the entire pipeline
+        # Return a basic report noting the limitation
         return {
-            "status": "failed",
-            "error_message": f"Report generation failed: {str(e)}",
+            "report": {
+                "agent_name": "synthesis_agent",
+                "timestamp": datetime.utcnow().isoformat() + "Z",
+                "report_content": (
+                    "Report generation encountered an error. "
+                    "Some assessments may be incomplete. "
+                    f"Failed agents: {', '.join(failed_agents) if failed_agents else 'none'}"
+                ),
+                "limitations": {
+                    "synthesis_failed": True,
+                    "failed_agents": failed_agents,
+                },
+            },
+            "status": "completed",  # Still mark as completed with limitations
         }
 
 
@@ -235,6 +345,7 @@ def process_evaluation(
         "submission_id": "",
         "status": "processing",
         "error_message": None,
+        "failed_agents": [],  # Track non-critical agent failures
     }
 
     # Create and run pipeline
