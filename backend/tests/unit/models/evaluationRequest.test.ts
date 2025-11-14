@@ -57,9 +57,10 @@ describe('EvaluationRequest Model', () => {
 
     it('should throw error when email is missing', () => {
       expect(() => {
+        // Intentionally omit email to test validation
         new EvaluationRequest({
           url: 'https://example.com',
-        } as unknown as { url: string });
+        } as Partial<{ email: string; url: string }> as { email: string; url?: string });
       }).toThrow('Email is required');
     });
 

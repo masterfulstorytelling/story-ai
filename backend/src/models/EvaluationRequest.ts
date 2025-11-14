@@ -177,22 +177,40 @@ export class EvaluationRequest {
 
   // Serialization methods
   toJSON(): Record<string, unknown> {
-    return {
+    const json: Record<string, unknown> = {
       id: this.id,
       email: this.email,
-      url: this.url,
-      uploaded_files: this.uploaded_files?.map((f) => ({
-        ...f,
-        uploaded_at: f.uploaded_at.toISOString(),
-      })),
-      user_provided_audience: this.user_provided_audience,
       status: this.status,
       submitted_at: this.submitted_at.toISOString(),
-      processing_started_at: this.processing_started_at?.toISOString(),
-      completed_at: this.completed_at?.toISOString(),
-      error_message: this.error_message,
-      report_id: this.report_id,
     };
+
+    // Only include optional fields if they have values (Firestore doesn't accept undefined)
+    if (this.url) {
+      json.url = this.url;
+    }
+    if (this.uploaded_files && this.uploaded_files.length > 0) {
+      json.uploaded_files = this.uploaded_files.map((f) => ({
+        ...f,
+        uploaded_at: f.uploaded_at.toISOString(),
+      }));
+    }
+    if (this.user_provided_audience) {
+      json.user_provided_audience = this.user_provided_audience;
+    }
+    if (this.processing_started_at) {
+      json.processing_started_at = this.processing_started_at.toISOString();
+    }
+    if (this.completed_at) {
+      json.completed_at = this.completed_at.toISOString();
+    }
+    if (this.error_message) {
+      json.error_message = this.error_message;
+    }
+    if (this.report_id) {
+      json.report_id = this.report_id;
+    }
+
+    return json;
   }
 
   static fromJSON(json: Record<string, unknown>): EvaluationRequest {

@@ -1,6 +1,6 @@
 /**
  * Validation middleware for evaluation submissions
- *
+ * 
  * Validates:
  * - Email format (required)
  * - URL format and protocol (HTTP/HTTPS only, optional)
@@ -28,7 +28,11 @@ const ALLOWED_FILE_TYPES = [
 
 const ALLOWED_FILE_EXTENSIONS = ['.pdf', '.pptx', '.docx'];
 
-export function validateSubmission(req: Request, res: Response, next: NextFunction): void {
+export function validateSubmission(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const errors: ValidationError[] = [];
 
   // Validate email (required)
@@ -151,3 +155,4 @@ function getFileExtension(filename: string): string {
 function containsPathTraversal(filename: string): boolean {
   return filename.includes('..') || filename.includes('/') || filename.includes('\\');
 }
+
