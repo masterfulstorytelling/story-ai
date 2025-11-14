@@ -5,7 +5,12 @@ from typing import Optional
 from urllib.parse import urljoin, urlparse
 from urllib.robotparser import RobotFileParser
 
-from playwright.sync_api import sync_playwright, Page, TimeoutError as PlaywrightTimeoutError, Error as PlaywrightError
+from playwright.sync_api import (
+    sync_playwright,
+    Page,
+    TimeoutError as PlaywrightTimeoutError,
+    Error as PlaywrightError,
+)
 
 from src.models.scraped_content import ScrapedContent, PageContent
 from src.utils.logger import get_logger
