@@ -15,6 +15,7 @@ import { EvaluationRequest } from '../../models/EvaluationRequest';
 import { logger } from '../../utils/logger';
 import { TaskPayload } from '../../services/taskService';
 import { processEvaluation as processWithAI } from '../../services/aiProcessingService';
+import { deliverReport } from '../../services/reportDeliveryService';
 
 /**
  * Process evaluation request handler
@@ -82,8 +83,22 @@ export async function processEvaluationHandler(
       hasReport: !!processingResult.report,
     });
 
-    // TODO (T089): Generate and deliver report
-    // await deliverReport(evaluationRequest, processingResult);
+    // Deliver report via email (T089)
+    try {
+      await deliverReport({
+        evaluationRequest,
+        processingResult,
+      });
+      logger.info('Report delivered successfully', { submissionId });
+    } catch (error) {
+      // Log error but don't fail the entire processing
+      // The report is still stored in Firestore and can be retrieved
+      logger.error('Failed to deliver report via email', error, {
+        submissionId,
+        email: evaluationRequest.email,
+      });
+      // Continue processing - report is still available via status endpoint
+    }
 
     // Store processing result in Firestore (for T090 status endpoint)
     const evaluationsRef = firestore.collection(COLLECTIONS.EVALUATIONS);
