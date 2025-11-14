@@ -15,7 +15,7 @@ import { getFirestore, COLLECTIONS } from './firestoreService';
 import { getBucket, BUCKETS } from './storageService';
 import { createTask, TaskPayload } from './taskService';
 import { logger } from '../utils/logger';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
 export interface SubmissionData {
   email: string;
@@ -43,7 +43,7 @@ async function processFileUploads(
 
   for (const file of files) {
     // Generate unique filename to prevent collisions
-    const fileId = uuidv4();
+    const fileId = randomUUID();
     const fileExtension = getFileExtension(file.originalname);
     const cloudFileName = `${fileId}${fileExtension}`;
     const cloudPath = `submissions/${cloudFileName}`;

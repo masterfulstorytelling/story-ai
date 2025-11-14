@@ -73,7 +73,7 @@ export async function rateLimiter(
       }
 
       // Return 429 with appropriate message
-      const message =
+      const errorMessage =
         result.reason === 'email'
           ? result.emailLimit?.message ||
             'Rate limit exceeded. Maximum 3 submissions per email per 24 hours.'
@@ -82,7 +82,7 @@ export async function rateLimiter(
 
       res.status(429).json({
         error: 'RATE_LIMIT_EXCEEDED',
-        message: 'Rate limit exceeded. Please try again later.',
+        message: errorMessage,
         details: {
           reason: result.reason,
           emailLimit: result.emailLimit,
