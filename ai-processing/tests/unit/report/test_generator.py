@@ -33,11 +33,93 @@ class TestReportGenerator:
         """Test that generated report is 2-5 pages."""
         from src.report.generator import generate_pdf_report
 
+        # Use realistic data that matches what a real report would contain
+        # to properly test the 2-5 page requirement (FR-020)
         report_data = {
-            "executive_summary": "Test summary",
-            "audience_analysis": "Test analysis",
-            "assessments": {},
-            "recommendations": "Test recommendations",
+            "executive_summary": (
+                "This is a comprehensive executive summary that provides a detailed overview "
+                "of the evaluation findings. The analysis reveals significant opportunities "
+                "for improvement in corporate storytelling across multiple dimensions. "
+                "Key findings indicate that the messaging lacks clarity for target audiences, "
+                "particularly for non-technical stakeholders. The assessment identifies specific "
+                "areas where the narrative can be strengthened to better communicate value "
+                "propositions and differentiate the company in the marketplace."
+            ),
+            "audience_analysis": (
+                "The evaluation identified three primary target audiences: CFOs, CTOs, and "
+                "business executives. Each audience has distinct information needs and technical "
+                "backgrounds. CFOs require clear financial value propositions and ROI narratives. "
+                "CTOs need technical depth balanced with business context. Business executives "
+                "seek strategic positioning and competitive differentiation. The current messaging "
+                "does not adequately address the unique needs of each audience segment."
+            ),
+            "clarity_assessment": {
+                "CFO": (
+                    "The clarity assessment for CFOs reveals significant gaps in financial "
+                    "messaging. Key value propositions are buried in technical jargon that "
+                    "obscures the business impact. The messaging fails to clearly articulate "
+                    "cost savings, revenue opportunities, or risk mitigation benefits that "
+                    "CFOs prioritize. Specific examples of unclear language include technical "
+                    "terms without business context and abstract concepts without concrete "
+                    "financial implications."
+                ),
+                "CTO": (
+                    "For CTOs, the technical depth is appropriate but lacks sufficient business "
+                    "context. The messaging assumes technical knowledge but doesn't connect "
+                    "technical capabilities to strategic business outcomes. While the technical "
+                    "accuracy is strong, the narrative would benefit from clearer articulation "
+                    "of how technical innovations translate to competitive advantages."
+                ),
+            },
+            "technical_appropriateness": {
+                "CFO": (
+                    "The technical level is inappropriate for CFOs. The messaging uses "
+                    "specialized terminology without explanation, making it inaccessible to "
+                    "financial executives. Terms like 'distributed architecture' and 'microservices' "
+                    "are used without business context, creating barriers to understanding the "
+                    "value proposition."
+                ),
+            },
+            "importance_value": {
+                "CFO": (
+                    "The importance and value messaging for CFOs is weak. The narrative focuses "
+                    "on technical features rather than financial benefits. Missing elements "
+                    "include quantified cost savings, revenue impact, risk reduction metrics, "
+                    "and clear ROI calculations that CFOs need to make investment decisions."
+                ),
+            },
+            "voice_personality": (
+                "The voice and personality assessment reveals a corporate tone that lacks "
+                "distinctiveness. The messaging reads as generic industry-speak without a unique "
+                "brand voice. The personality is professional but forgettable, missing "
+                "opportunities to create emotional connections or memorable brand associations."
+            ),
+            "storytelling_memorability": (
+                "The storytelling and memorability assessment indicates weak narrative structure. "
+                "The messaging lacks compelling stories, concrete examples, or memorable metaphors "
+                "that would help audiences remember and share the value proposition. The content "
+                "relies on abstract concepts rather than vivid, relatable narratives that create "
+                "lasting impressions."
+            ),
+            "recommendations": (
+                "Based on the evaluation, the following recommendations are critical for "
+                "improving corporate storytelling effectiveness: First, develop audience-specific "
+                "messaging frameworks that address the unique information needs of each target "
+                "audience. Second, create clear financial narratives for CFOs that quantify value "
+                "propositions with specific metrics and ROI calculations. Third, balance technical "
+                "depth with business context for CTOs, connecting technical capabilities to "
+                "strategic outcomes. Fourth, develop a distinctive brand voice that differentiates "
+                "the company from competitors. Fifth, incorporate compelling stories and concrete "
+                "examples that make the messaging more memorable and shareable. Sixth, provide "
+                "specific, actionable guidance that signals the complexity of the challenges "
+                "and demonstrates deep understanding of audience needs."
+            ),
+            "next_steps": (
+                "To implement these recommendations, we recommend scheduling a consultation with "
+                "Feedforward AI to develop a comprehensive storytelling strategy. Our team can "
+                "help create audience-specific messaging frameworks, develop compelling narratives, "
+                "and establish a distinctive brand voice that resonates with your target audiences."
+            ),
         }
 
         pdf_content = generate_pdf_report(report_data)
