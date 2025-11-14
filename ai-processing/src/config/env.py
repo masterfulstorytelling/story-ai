@@ -3,12 +3,19 @@
 import os
 from pathlib import Path
 from typing import Optional
-from dotenv import load_dotenv
 from pydantic import BaseModel, Field, field_validator
 
-# Load .env file from project root (ai-processing directory)
-env_path = Path(__file__).parent.parent.parent / ".env"
-load_dotenv(dotenv_path=env_path)
+# Load .env file from project root (ai-processing directory) if it exists
+# In CI/testing, environment variables are set directly, so .env file is optional
+try:
+    from dotenv import load_dotenv
+
+    env_path = Path(__file__).parent.parent.parent / ".env"
+    load_dotenv(dotenv_path=env_path, override=False)
+except ImportError:
+    # python-dotenv not installed - environment variables must be set directly
+    # This is fine for CI/testing where env vars are set via GitHub Actions
+    pass
 
 
 class EnvConfig(BaseModel):
