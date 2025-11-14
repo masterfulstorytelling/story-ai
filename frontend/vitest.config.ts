@@ -7,6 +7,6 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
+    passWithNoTests: true, // Don't fail if no tests found (for now)
   },
 });
-
