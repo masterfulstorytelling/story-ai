@@ -1,5 +1,6 @@
 """Processing service that orchestrates ingestion, agent pipeline, and report generation."""
 
+import concurrent.futures
 from typing import Optional, List, Dict, Any
 from google.cloud import storage
 
@@ -8,6 +9,12 @@ from src.orchestration.pipeline import process_evaluation
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
+
+
+class ProcessingTimeoutError(Exception):
+    """Exception raised when processing exceeds the timeout limit."""
+
+    pass
 
 
 class ProcessingService:
@@ -25,6 +32,7 @@ class ProcessingService:
         file_paths: Optional[List[Dict[str, str]]] = None,
         user_provided_audience: Optional[str] = None,
         bucket_name: Optional[str] = None,
+        timeout_seconds: int = 600,  # 10 minutes default (FR-030)
     ) -> Dict[str, Any]:
         """
         Process an evaluation request through the full pipeline.
@@ -40,6 +48,7 @@ class ProcessingService:
             file_paths: List of dicts with 'bucket', 'path', 'filename' for files (optional)
             user_provided_audience: Optional user-specified audience
             bucket_name: Cloud Storage bucket name for file downloads
+            timeout_seconds: Maximum processing time in seconds (default: 600 = 10 minutes)
 
         Returns:
             Dictionary with:
@@ -51,6 +60,7 @@ class ProcessingService:
                 - error: Error message if status is 'failed'
 
         Raises:
+            ProcessingTimeoutError: If processing exceeds timeout_seconds
             ScrapingError: If URL scraping fails
             InsufficientContentError: If scraped content is insufficient
             UnsupportedFileFormatError: If file format is unsupported
@@ -63,10 +73,12 @@ class ProcessingService:
                 "has_url": bool(url),
                 "has_files": bool(file_paths),
                 "user_provided_audience": bool(user_provided_audience),
+                "timeout_seconds": timeout_seconds,
             },
         )
 
-        try:
+        def _process() -> Dict[str, Any]:
+            """Internal processing function to run with timeout."""
             # Step 1: Ingest content (scrape URL and/or parse files)
             content = self.ingestion_service.ingest_content(
                 url=url, file_paths=file_paths, bucket_name=bucket_name
@@ -101,11 +113,32 @@ class ProcessingService:
 
             return result
 
+        try:
+            # Execute processing with timeout
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(_process)
+                try:
+                    result = future.result(timeout=timeout_seconds)
+                    return result
+                except concurrent.futures.TimeoutError:
+                    # Log timeout error
+                    logger.error(
+                        f"Processing timeout after {timeout_seconds} seconds for submission {submission_id}",
+                        exc_info=True,
+                    )
+                    raise ProcessingTimeoutError(
+                        f"Processing exceeded timeout of {timeout_seconds} seconds "
+                        f"({timeout_seconds // 60} minutes). "
+                        "Please try again or contact support if the issue persists."
+                    )
+
+        except ProcessingTimeoutError:
+            # Re-raise timeout errors
+            raise
         except Exception as e:
             logger.error(
-                "Evaluation processing failed",
-                error=e,
-                metadata={"submission_id": submission_id},
+                f"Evaluation processing failed for submission {submission_id}: {str(e)}",
+                exc_info=True,
             )
             # Re-raise to let caller handle
             raise
