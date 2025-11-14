@@ -1,0 +1,50 @@
+name: Integration CI
+
+on:
+  push:
+    branches: [main, '001-story-eval-mvp']
+  pull_request:
+    branches: [main]
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    
+    services:
+      # Add services if needed (e.g., Firestore emulator, etc.)
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+      
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+      
+      - name: Install AI processing dependencies
+        working-directory: ./ai-processing
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run integration tests
+        run: |
+          echo "Integration tests will be added in Phase 3/4"
+          # TODO: Add end-to-end integration tests
+        env:
+          NODE_ENV: test
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY_TEST || 'test-key' }}
+
