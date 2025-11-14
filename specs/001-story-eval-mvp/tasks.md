@@ -80,8 +80,8 @@
 - [ ] T032 [P] [US1] Unit test for rate limiting service in backend/tests/unit/services/rateLimitService.test.ts
 - [ ] T033 [P] [US1] Unit test for validation middleware in backend/tests/unit/middleware/validation.test.ts
 - [ ] T034 [P] [US1] Integration test for submission flow in backend/tests/integration/test_submission_flow.test.ts
-- [ ] T035 [P] [US1] Unit test for EvaluationForm component in frontend/tests/unit/components/EvaluationForm.test.ts
-- [ ] T036 [P] [US1] E2E test for form submission in frontend/tests/e2e/submit_evaluation.spec.ts
+- [X] T035 [P] [US1] Unit test for EvaluationForm component in frontend/tests/unit/components/EvaluationForm.test.ts
+- [X] T036 [P] [US1] E2E test for form submission in frontend/tests/e2e/submit_evaluation.spec.ts
 
 ### Implementation for User Story 1
 
@@ -94,10 +94,10 @@
 - [ ] T043 [US1] Implement file upload handler in backend/src/api/middleware/fileUpload.ts (Multer, 50MB limit)
 - [ ] T044 [US1] Implement POST /evaluations endpoint in backend/src/api/routes/evaluationRoutes.ts (depends on T042, T043, T040, T041)
 - [ ] T045 [US1] Implement email confirmation service in backend/src/services/emailService.ts (SendGrid, estimated wait time)
-- [ ] T046 [US1] Create EvaluationForm component in frontend/src/components/EvaluationForm.vue
-- [ ] T047 [US1] Create ConfirmationMessage component in frontend/src/components/ConfirmationMessage.vue
-- [ ] T048 [US1] Create ErrorDisplay component in frontend/src/components/ErrorDisplay.vue
-- [ ] T049 [US1] Implement API client service in frontend/src/services/api.ts
+- [X] T046 [US1] Create EvaluationForm component in frontend/src/components/EvaluationForm.vue
+- [X] T047 [US1] Create ConfirmationMessage component in frontend/src/components/ConfirmationMessage.vue
+- [X] T048 [US1] Create ErrorDisplay component in frontend/src/components/ErrorDisplay.vue
+- [X] T049 [US1] Implement API client service in frontend/src/services/api.ts
 - [ ] T050 [US1] Create SubmitEvaluation page in frontend/src/pages/SubmitEvaluation.vue (depends on T046, T047, T048, T049)
 - [ ] T051 [US1] Setup Vue router and main app entry in frontend/src/main.ts (depends on T050)
 - [ ] T052 [US1] Add form validation logic in frontend/src/components/EvaluationForm.vue (client-side validation)
