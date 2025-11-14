@@ -37,6 +37,7 @@ export interface ProcessingResult {
 export interface ProcessingError extends Error {
   statusCode?: number;
   response?: unknown;
+  cause?: unknown;
 }
 
 /**
@@ -129,7 +130,7 @@ export async function processEvaluation(
       throw error;
     }
 
-    const result: ProcessingResult = await response.json();
+    const result = (await response.json()) as ProcessingResult;
 
     logger.info('AI processing service request completed', {
       submissionId,
