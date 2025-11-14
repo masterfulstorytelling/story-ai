@@ -136,8 +136,10 @@ def _render_dict_section(html: str, section_name: str, data: Optional[Dict[str, 
 
     section_html = ""
     for audience, assessment in data.items():
-        audience_html = f"<h3>{_escape_html(audience)}</h3>\n        "
-        assessment_html = f"<div>{_escape_html(assessment)}</div>\n        "
+        audience_escaped = _escape_html(audience)
+        assessment_escaped = _escape_html(assessment)
+        audience_html = f"<h3>{audience_escaped}</h3>\n        "
+        assessment_html = f"<div>{assessment_escaped}</div>\n        "
         section_html += audience_html + assessment_html
 
     # Replace the template loop with rendered content
