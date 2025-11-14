@@ -5,7 +5,9 @@
  */
 
 import { Router, Request, Response } from 'express';
-import type multer from 'multer';
+
+// Multer file type from @types/multer
+type MulterFile = Express.Multer.File;
 import { validateSubmission } from '../middleware/validation';
 import { rateLimiter } from '../middleware/rateLimiter';
 import { fileUploadMiddleware } from '../middleware/fileUpload';
@@ -27,7 +29,7 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       const { email, url, user_provided_audience } = req.body;
-      const files = req.files as multer.File[] | undefined;
+      const files = req.files as MulterFile[] | undefined;
 
       // Create submission
       const submission = await createSubmission({

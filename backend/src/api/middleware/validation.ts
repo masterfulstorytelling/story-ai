@@ -9,7 +9,9 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import type multer from 'multer';
+
+// Multer file type from @types/multer
+type MulterFile = Express.Multer.File;
 
 export interface ValidationError {
   error: string;
@@ -53,7 +55,7 @@ export function validateSubmission(req: Request, res: Response, next: NextFuncti
   }
 
   // Validate files if provided
-  const files = req.files as multer.File[] | undefined;
+  const files = req.files as MulterFile[] | undefined;
   if (files && files.length > 0) {
     for (const file of files) {
       const fileError = validateFile(file);
@@ -104,7 +106,7 @@ function isValidURL(url: string): boolean {
   }
 }
 
-function validateFile(file: multer.File): ValidationError | null {
+function validateFile(file: MulterFile): ValidationError | null {
   // Check file size
   if (file.size > MAX_FILE_SIZE) {
     return {

@@ -10,6 +10,9 @@
 import multer from 'multer';
 import type { Request } from 'express';
 
+// Multer file type from @types/multer
+type MulterFile = Express.Multer.File;
+
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 const MAX_FILES = 10; // Maximum number of files per submission
 
@@ -17,7 +20,7 @@ const MAX_FILES = 10; // Maximum number of files per submission
 const storage = multer.memoryStorage();
 
 // File filter to accept only PDF, PPTX, DOCX
-const fileFilter = (_req: Request, file: multer.File, cb: multer.FileFilterCallback): void => {
+const fileFilter = (_req: Request, file: MulterFile, cb: multer.FileFilterCallback): void => {
   const allowedMimeTypes = [
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.presentationml.presentation', // PPTX

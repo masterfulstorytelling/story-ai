@@ -16,12 +16,14 @@ import { getBucket, BUCKETS } from './storageService';
 import { createTask, TaskPayload } from './taskService';
 import { logger } from '../utils/logger';
 import { randomUUID } from 'crypto';
-import type multer from 'multer';
+
+// Multer file type from @types/multer
+type MulterFile = Express.Multer.File;
 
 export interface SubmissionData {
   email: string;
   url?: string;
-  files?: multer.File[];
+  files?: MulterFile[];
   user_provided_audience?: string;
 }
 
@@ -36,7 +38,7 @@ export interface SubmissionResult {
 /**
  * Process file uploads and return FileReference array
  */
-async function processFileUploads(files: multer.File[]): Promise<FileReference[]> {
+async function processFileUploads(files: MulterFile[]): Promise<FileReference[]> {
   const bucket = getBucket(BUCKETS.UPLOADS);
   const fileReferences: FileReference[] = [];
 

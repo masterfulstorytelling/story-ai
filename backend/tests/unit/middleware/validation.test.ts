@@ -10,8 +10,10 @@
  */
 
 import { Request, Response } from 'express';
-import type multer from 'multer';
 import { validateSubmission } from '../../../src/api/middleware/validation';
+
+// Multer file type from @types/multer
+type MulterFile = Express.Multer.File;
 
 describe('Validation Middleware', () => {
   let mockRequest: Partial<Request>;
@@ -202,7 +204,7 @@ describe('Validation Middleware', () => {
           filename: 'document.pdf',
           path: '/tmp/document.pdf',
           buffer: Buffer.from('test'),
-        } as multer.File,
+        } as MulterFile,
       ];
 
       validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
@@ -240,7 +242,7 @@ describe('Validation Middleware', () => {
           originalname: 'document.pdf',
           mimetype: 'application/pdf',
           size: 1024000, // 1MB
-        } as multer.File,
+        } as MulterFile,
       ];
 
       validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
@@ -258,7 +260,7 @@ describe('Validation Middleware', () => {
           originalname: 'presentation.pptx',
           mimetype: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
           size: 2048000, // 2MB
-        } as multer.File,
+        } as MulterFile,
       ];
 
       validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
@@ -276,7 +278,7 @@ describe('Validation Middleware', () => {
           originalname: 'document.docx',
           mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
           size: 512000, // 512KB
-        } as multer.File,
+        } as MulterFile,
       ];
 
       validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
@@ -294,7 +296,7 @@ describe('Validation Middleware', () => {
           originalname: 'document.txt',
           mimetype: 'text/plain',
           size: 1024,
-        } as multer.File,
+        } as MulterFile,
       ];
 
       validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
@@ -316,7 +318,7 @@ describe('Validation Middleware', () => {
           originalname: 'large.pdf',
           mimetype: 'application/pdf',
           size: maxSize + 1,
-        } as multer.File,
+        } as MulterFile,
       ];
 
       validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
@@ -342,7 +344,7 @@ describe('Validation Middleware', () => {
           originalname: 'large.pdf',
           mimetype: 'application/pdf',
           size: maxSize,
-        } as multer.File,
+        } as MulterFile,
       ];
 
       validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
@@ -367,7 +369,7 @@ describe('Validation Middleware', () => {
           mimetype: 'application/pdf',
           size: 2048000,
         },
-      ] as multer.File[];
+      ] as MulterFile[];
 
       validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 

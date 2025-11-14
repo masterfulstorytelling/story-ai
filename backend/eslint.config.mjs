@@ -19,6 +19,7 @@ export default [
       globals: {
         ...globals.node,
         ...globals.es2021,
+        Express: 'readonly', // Express namespace from @types/express
       },
     },
     plugins: {
@@ -44,6 +45,7 @@ export default [
         ...globals.node,
         ...globals.es2021,
         ...globals.jest,
+        Express: 'readonly', // Express namespace from @types/express
       },
     },
     plugins: {
