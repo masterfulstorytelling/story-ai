@@ -122,10 +122,11 @@ class ProcessingService:
                     return result
                 except concurrent.futures.TimeoutError:
                     # Log timeout error
-                    logger.error(
-                        f"Processing timeout after {timeout_seconds} seconds for submission {submission_id}",
-                        exc_info=True,
+                    timeout_msg = (
+                        f"Processing timeout after {timeout_seconds} seconds "
+                        f"for submission {submission_id}"
                     )
+                    logger.error(timeout_msg, exc_info=True)
                     raise ProcessingTimeoutError(
                         f"Processing exceeded timeout of {timeout_seconds} seconds "
                         f"({timeout_seconds // 60} minutes). "
