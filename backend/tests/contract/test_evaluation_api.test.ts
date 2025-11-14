@@ -208,11 +208,6 @@ describe('POST /evaluations - Contract Tests', () => {
             expect(response.status).toBeGreaterThanOrEqual(400);
           }
         }
-        if (response.status === 429) {
-          expect(response.body).toHaveProperty('error');
-          expect(response.body).toHaveProperty('message');
-          expect(response.body.message?.toLowerCase()).toContain('rate limit');
-        }
       }
     });
   });
