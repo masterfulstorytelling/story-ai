@@ -5,6 +5,8 @@ from typing import Optional
 from urllib.parse import urljoin, urlparse
 from urllib.robotparser import RobotFileParser
 
+import requests
+
 from playwright.sync_api import (
     sync_playwright,
     Page,
@@ -133,49 +135,79 @@ def scrape_website(url: str, timeout: int = 30000, max_redirects: int = 5) -> Sc
         page = context.new_page()
 
         try:
-            # Follow redirects
-            redirect_count = 0
-            current_url = url
-            while redirect_count < max_redirects:
-                try:
-                    response = page.goto(current_url, wait_until="networkidle", timeout=timeout)
-                except PlaywrightTimeoutError as e:
-                    raise ScrapingError(f"Timeout while accessing {current_url}: {str(e)}") from e
-                except PlaywrightError as e:
-                    raise ScrapingError(f"Error accessing {current_url}: {str(e)}") from e
+            # Check redirect count using requests (Playwright follows redirects automatically)
+            # This allows us to detect redirect chains before using Playwright
+            try:
+                # Count redirects by following them manually
+                redirect_count = 0
+                current_check_url = url
+                visited_urls = {current_check_url}
 
-                if response and response.status >= 400:
-                    raise ScrapingError(f"HTTP {response.status} error for {current_url}")
+                # Follow redirects manually to count them
+                while (
+                    redirect_count < max_redirects + 1
+                ):  # Check one more than max to detect excess
+                    check_response = requests.head(
+                        current_check_url, allow_redirects=False, timeout=5
+                    )
 
-                final_url = page.url
-                if final_url == current_url:
-                    break
+                    # Check if it's a redirect (3xx status)
+                    if check_response.status_code in (301, 302, 303, 307, 308):
+                        redirect_location = check_response.headers.get("Location")
+                        if not redirect_location:
+                            break
 
-                # Check if redirect is to different domain
-                parsed_current = urlparse(current_url)
-                parsed_final = urlparse(final_url)
+                        # Make absolute URL
+                        redirect_url = urljoin(current_check_url, redirect_location)
 
-                if parsed_current.netloc != parsed_final.netloc:
-                    # Different domain - follow redirect
-                    current_url = final_url
-                    redirect_count += 1
-                else:
-                    break
+                        # Check for redirect loops
+                        if redirect_url in visited_urls:
+                            raise ScrapingError(
+                                f"Redirect loop detected: {redirect_url} already visited"
+                            )
 
-            if redirect_count >= max_redirects:
-                raise ScrapingError(f"Too many redirects (>{max_redirects}) for {url}")
+                        visited_urls.add(redirect_url)
+                        redirect_count += 1
+                        current_check_url = redirect_url
+
+                        # If we've exceeded max redirects, raise error
+                        if redirect_count > max_redirects:
+                            raise ScrapingError(
+                                f"Too many redirects ({redirect_count} > {max_redirects}) for {url}"
+                            )
+                    else:
+                        # Not a redirect, we're done
+                        break
+            except requests.RequestException:
+                # If requests fails, proceed with Playwright and let it handle redirects
+                # This is a fallback for cases where requests can't access the URL
+                pass
+
+            # Now use Playwright to actually scrape the content
+            # Playwright will follow redirects automatically
+            try:
+                response = page.goto(url, wait_until="networkidle", timeout=timeout)
+            except PlaywrightTimeoutError as e:
+                raise ScrapingError(f"Timeout while accessing {url}: {str(e)}") from e
+            except PlaywrightError as e:
+                raise ScrapingError(f"Error accessing {url}: {str(e)}") from e
+
+            if response and response.status >= 400:
+                raise ScrapingError(f"HTTP {response.status} error for {url}")
+
+            final_url = page.url
 
             # Scrape homepage
             try:
-                homepage = scrape_page(page, current_url, timeout)
+                homepage = scrape_page(page, final_url, timeout)
             except PlaywrightTimeoutError as e:
-                raise ScrapingError(f"Timeout while scraping {current_url}: {str(e)}") from e
+                raise ScrapingError(f"Timeout while scraping {final_url}: {str(e)}") from e
             except PlaywrightError as e:
-                raise ScrapingError(f"Error scraping {current_url}: {str(e)}") from e
+                raise ScrapingError(f"Error scraping {final_url}: {str(e)}") from e
 
             # Find and scrape About page
             about_page = None
-            about_url = find_about_page_url(current_url, page)
+            about_url = find_about_page_url(final_url, page)
             if about_url:
                 try:
                     about_page = scrape_page(page, about_url, timeout)
