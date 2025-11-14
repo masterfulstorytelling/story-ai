@@ -1,0 +1,634 @@
+# Agent Interface Contracts
+# Defines input/output schemas for each agent in the multi-agent pipeline
+
+agents:
+  audience_identification:
+    description: Identifies target audiences from content and user input
+    input:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: object
+          properties:
+            scraped_content:
+              type: object
+              properties:
+                homepage:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                    url:
+                      type: string
+                about_page:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                    url:
+                      type: string
+            uploaded_content:
+              type: array
+              items:
+                type: object
+                properties:
+                  filename:
+                    type: string
+                  text:
+                    type: string
+        user_provided_audience:
+          type: string
+          description: Optional user-specified audience
+    output:
+      type: object
+      required:
+        - agent_name
+        - timestamp
+        - audiences
+      properties:
+        agent_name:
+          type: string
+          enum: [audience_identification]
+        timestamp:
+          type: string
+          format: date-time
+        audiences:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - description
+              - specificity_score
+              - source
+            properties:
+              id:
+                type: string
+                format: uuid
+              description:
+                type: string
+                example: CISOs at Fortune 500 financial institutions
+              specificity_score:
+                type: integer
+                minimum: 0
+                maximum: 100
+              rationale:
+                type: string
+              source:
+                type: string
+                enum: [user_provided, content_analysis, both]
+              citations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    quote:
+                      type: string
+                    source:
+                      type: string
+
+  clarity_agent:
+    description: Evaluates clarity of messaging for a specific audience
+    input:
+      type: object
+      required:
+        - audience
+        - content
+      properties:
+        audience:
+          type: object
+          required:
+            - id
+            - description
+          properties:
+            id:
+              type: string
+              format: uuid
+            description:
+              type: string
+        content:
+          type: object
+          properties:
+            scraped_content:
+              type: object
+            uploaded_content:
+              type: array
+    output:
+      type: object
+      required:
+        - agent_name
+        - audience_id
+        - audience_description
+        - timestamp
+        - assessments
+      properties:
+        agent_name:
+          type: string
+          enum: [clarity_assessment]
+        audience_id:
+          type: string
+          format: uuid
+        audience_description:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        assessments:
+          type: object
+          required:
+            - what_they_do
+            - how_different
+            - who_uses
+          properties:
+            what_they_do:
+              type: object
+              required:
+                - clear
+                - explanation
+              properties:
+                clear:
+                  type: boolean
+                explanation:
+                  type: string
+                citations:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      quote:
+                        type: string
+                      source:
+                        type: string
+                      section:
+                        type: string
+            how_different:
+              type: object
+              required:
+                - clear
+                - explanation
+              properties:
+                clear:
+                  type: boolean
+                explanation:
+                  type: string
+                citations:
+                  type: array
+                missing:
+                  type: string
+            who_uses:
+              type: object
+              required:
+                - clear
+                - explanation
+              properties:
+                clear:
+                  type: boolean
+                explanation:
+                  type: string
+                citations:
+                  type: array
+        overall_clarity_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        summary:
+          type: string
+
+  technical_level_agent:
+    description: Assesses technical level appropriateness for each audience
+    input:
+      type: object
+      required:
+        - audiences
+        - content
+      properties:
+        audiences:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              description:
+                type: string
+        content:
+          type: object
+    output:
+      type: object
+      required:
+        - agent_name
+        - timestamp
+        - content_sophistication
+        - audience_appropriateness
+      properties:
+        agent_name:
+          type: string
+          enum: [technical_level_assessment]
+        timestamp:
+          type: string
+          format: date-time
+        content_sophistication:
+          type: object
+          properties:
+            overall_level:
+              type: integer
+              minimum: 0
+              maximum: 100
+            jargon_density:
+              type: string
+              enum: [low, medium, high]
+            assumed_knowledge:
+              type: string
+            examples:
+              type: array
+              items:
+                type: object
+                properties:
+                  quote:
+                    type: string
+                  technical_level:
+                    type: integer
+                  source:
+                    type: string
+        audience_appropriateness:
+          type: array
+          items:
+            type: object
+            required:
+              - audience_id
+              - audience_description
+              - match
+              - explanation
+            properties:
+              audience_id:
+                type: string
+                format: uuid
+              audience_description:
+                type: string
+              match:
+                type: string
+                enum: [too_technical, too_vague, appropriate]
+              explanation:
+                type: string
+              recommendation:
+                type: string
+              problematic_examples:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    quote:
+                      type: string
+                    source:
+                      type: string
+
+  importance_agent:
+    description: Evaluates whether content conveys why audiences should care
+    input:
+      type: object
+      required:
+        - audiences
+        - content
+      properties:
+        audiences:
+          type: array
+        content:
+          type: object
+    output:
+      type: object
+      required:
+        - agent_name
+        - timestamp
+        - assessments
+      properties:
+        agent_name:
+          type: string
+          enum: [importance_assessment]
+        timestamp:
+          type: string
+          format: date-time
+        assessments:
+          type: array
+          items:
+            type: object
+            required:
+              - audience_id
+              - audience_description
+              - importance_conveyed
+              - explanation
+            properties:
+              audience_id:
+                type: string
+                format: uuid
+              audience_description:
+                type: string
+              importance_conveyed:
+                type: boolean
+              explanation:
+                type: string
+              citations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    quote:
+                      type: string
+                    source:
+                      type: string
+                    relevance:
+                      type: string
+              missing:
+                type: string
+
+  voice_personality_agent:
+    description: Assesses distinct voice, personality, and values
+    input:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: object
+    output:
+      type: object
+      required:
+        - agent_name
+        - timestamp
+        - voice_present
+        - assessment
+      properties:
+        agent_name:
+          type: string
+          enum: [voice_personality_assessment]
+        timestamp:
+          type: string
+          format: date-time
+        voice_present:
+          type: boolean
+        personality_type:
+          type: string
+        confidence:
+          type: integer
+          minimum: 0
+          maximum: 100
+        assessment:
+          type: object
+          properties:
+            consistency:
+              type: boolean
+            description:
+              type: string
+            indicators:
+              type: array
+              items:
+                type: object
+                properties:
+                  trait:
+                    type: string
+                  evidence:
+                    type: string
+                  citations:
+                    type: array
+            values_evident:
+              type: array
+              items:
+                type: string
+            vibe:
+              type: string
+        strengths:
+          type: string
+        weaknesses:
+          type: string
+
+  vividness_agent:
+    description: Assesses vividness, memorability, and storytelling quality
+    input:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: object
+    output:
+      type: object
+      required:
+        - agent_name
+        - timestamp
+        - overall_assessment
+        - score
+        - findings
+      properties:
+        agent_name:
+          type: string
+          enum: [vividness_storytelling_assessment]
+        timestamp:
+          type: string
+          format: date-time
+        overall_assessment:
+          type: string
+          enum: [vivid, generic, mixed]
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        findings:
+          type: object
+          properties:
+            vivid_language:
+              type: object
+              properties:
+                present:
+                  type: boolean
+                examples:
+                  type: array
+            generic_language:
+              type: object
+              properties:
+                present:
+                  type: boolean
+                examples:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      quote:
+                        type: string
+                      source:
+                        type: string
+                      critique:
+                        type: string
+            storytelling:
+              type: object
+              properties:
+                present:
+                  type: boolean
+                assessment:
+                  type: string
+            memorability:
+              type: object
+              properties:
+                score:
+                  type: integer
+                assessment:
+                  type: string
+        recommendations:
+          type: array
+          items:
+            type: string
+
+  citation_validation_agent:
+    description: Validates all quotes against source material
+    input:
+      type: object
+      required:
+        - all_agent_outputs
+        - source_content
+      properties:
+        all_agent_outputs:
+          type: array
+          description: Outputs from all previous agents
+        source_content:
+          type: object
+          properties:
+            scraped_content:
+              type: object
+            uploaded_content:
+              type: array
+    output:
+      type: object
+      required:
+        - agent_name
+        - timestamp
+        - validation_results
+        - validation_summary
+      properties:
+        agent_name:
+          type: string
+          enum: [citation_validation]
+        timestamp:
+          type: string
+          format: date-time
+        validation_results:
+          type: array
+          items:
+            type: object
+            required:
+              - quote
+              - claimed_source
+              - validated
+            properties:
+              quote:
+                type: string
+              claimed_source:
+                type: string
+              claimed_section:
+                type: string
+              validated:
+                type: boolean
+              exact_match:
+                type: boolean
+              actual_location:
+                type: string
+              actual_quote:
+                type: string
+              note:
+                type: string
+              error:
+                type: string
+              action:
+                type: string
+        validation_summary:
+          type: object
+          properties:
+            total_quotes:
+              type: integer
+            validated:
+              type: integer
+            flagged:
+              type: integer
+            exact_matches:
+              type: integer
+            close_matches:
+              type: integer
+
+  synthesis_editor_agent:
+    description: Synthesizes all agent outputs into cohesive report
+    input:
+      type: object
+      required:
+        - all_agent_outputs
+      properties:
+        all_agent_outputs:
+          type: object
+          properties:
+            audience_identification:
+              type: object
+            clarity_assessments:
+              type: array
+            technical_level:
+              type: object
+            importance:
+              type: object
+            voice_personality:
+              type: object
+            vividness:
+              type: object
+            validated_citations:
+              type: object
+    output:
+      type: object
+      required:
+        - agent_name
+        - timestamp
+        - report_sections
+      properties:
+        agent_name:
+          type: string
+          enum: [synthesis_editor]
+        timestamp:
+          type: string
+          format: date-time
+        report_sections:
+          type: object
+          required:
+            - executive_summary
+            - detailed_findings
+            - recommendations
+            - call_to_action
+          properties:
+            executive_summary:
+              type: string
+            detailed_findings:
+              type: object
+              properties:
+                audience_analysis:
+                  type: string
+                clarity:
+                  type: string
+                technical_appropriateness:
+                  type: string
+                importance_value:
+                  type: string
+                voice_personality:
+                  type: string
+                vividness_storytelling:
+                  type: string
+            recommendations:
+              type: array
+              items:
+                type: object
+                properties:
+                  priority:
+                    type: string
+                    enum: [critical, high, medium, low]
+                  area:
+                    type: string
+                  recommendation:
+                    type: string
+                  example_fix:
+                    type: string
+            call_to_action:
+              type: string
+
