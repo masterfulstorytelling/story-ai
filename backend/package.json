@@ -22,10 +22,12 @@
     "@google-cloud/storage": "^7.17.3",
     "@google-cloud/tasks": "^6.2.1",
     "@sendgrid/mail": "^8.1.6",
+    "@types/uuid": "^10.0.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "joi": "^18.0.1",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.5",
