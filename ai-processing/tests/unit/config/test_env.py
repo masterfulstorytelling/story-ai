@@ -30,28 +30,20 @@ class TestEnvConfig:
 
     def test_default_langsmith_project(self):
         """Test default LangSmith project name."""
-        # Explicitly remove LANGSMITH_PROJECT to test default value
-        # (clear=False means existing env vars persist, so we must remove it)
-        env_vars = {
-            "ANTHROPIC_API_KEY": "test-key-123",
-            "FIRESTORE_PROJECT_ID": "test-project",
-            "CLOUD_STORAGE_BUCKET": "test-bucket",
-            "GCP_PROJECT_ID": "test-project",
-        }
-        # Remove LANGSMITH_PROJECT if it exists to test default
-        if "LANGSMITH_PROJECT" in os.environ:
-            original_langsmith_project = os.environ.pop("LANGSMITH_PROJECT")
-        else:
-            original_langsmith_project = None
-
-        try:
-            with patch.dict(os.environ, env_vars, clear=False):
-                config = load_env_config()
-                assert config.langsmith_project == "story-eval-mvp"
-        finally:
-            # Restore original value if it existed
-            if original_langsmith_project is not None:
-                os.environ["LANGSMITH_PROJECT"] = original_langsmith_project
+        # Use clear=True to ensure LANGSMITH_PROJECT is not set, testing the default
+        with patch.dict(
+            os.environ,
+            {
+                "ANTHROPIC_API_KEY": "test-key-123",
+                "FIRESTORE_PROJECT_ID": "test-project",
+                "CLOUD_STORAGE_BUCKET": "test-bucket",
+                "GCP_PROJECT_ID": "test-project",
+                # Explicitly don't set LANGSMITH_PROJECT to test default
+            },
+            clear=True,
+        ):
+            config = load_env_config()
+            assert config.langsmith_project == "story-eval-mvp"
 
     def test_optional_langsmith_api_key(self):
         """Test that LangSmith API key is optional."""
