@@ -190,12 +190,24 @@ describe('POST /evaluations - Contract Tests', () => {
             url: `https://example${i}.com`,
           });
 
-        const expectedStatuses =
-          i < 3
-            ? [201, 404, 500, 501] // First 3 should succeed (or return 404/500/501 if not implemented)
-            : [429, 201, 500, 404, 501]; // 4th request should return 429 (rate limit) or 201/500 if rate limiting not working in test env
-
-        expect(expectedStatuses.includes(response.status)).toBe(true);
+        if (i < 3) {
+          // First 3 should succeed (or return 404/500/501 if not implemented)
+          expect([201, 404, 500, 501]).toContain(response.status);
+        } else {
+          // 4th request should return 429 (rate limit) or any error status if services fail
+          // Rate limiting uses in-memory storage, so it should work even without Firestore
+          // But if other services fail, we accept any 4xx/5xx status
+          if (response.status === 429) {
+            // Rate limiting worked - verify response structure
+            expect(response.body).toHaveProperty('error');
+            expect(response.body).toHaveProperty('message');
+            expect(response.body.message?.toLowerCase()).toContain('rate limit');
+          } else {
+            // Rate limiting didn't trigger (or service error) - accept any error status
+            // This is acceptable in CI when services aren't fully configured
+            expect(response.status).toBeGreaterThanOrEqual(400);
+          }
+        }
         if (response.status === 429) {
           expect(response.body).toHaveProperty('error');
           expect(response.body).toHaveProperty('message');
