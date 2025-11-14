@@ -133,7 +133,7 @@ describe('Submission Flow Integration Tests', () => {
 
       if (response!.status === 429) {
         expect(response!.body).toHaveProperty('error');
-        expect(response!.body.message).toContain('rate limit');
+        expect(response!.body.message?.toLowerCase()).toContain('rate limit');
 
         // Verify no Firestore write occurred for the 4th request
         // (First 3 should have been written)
@@ -157,7 +157,7 @@ describe('Submission Flow Integration Tests', () => {
 
       if (response!.status === 429) {
         expect(response!.body).toHaveProperty('error');
-        expect(response!.body.message).toContain('rate limit');
+        expect(response!.body.message?.toLowerCase()).toContain('rate limit');
       }
     });
   });
