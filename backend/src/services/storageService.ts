@@ -32,4 +32,3 @@ export const BUCKETS = {
   REPORTS: 'storyai-reports',
   SCRAPED: 'storyai-scraped',
 } as const;
-

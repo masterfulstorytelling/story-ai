@@ -22,4 +22,3 @@ const PORT = env.port;
 app.listen(PORT, () => {
   logger.info(`Backend server started`, { port: PORT, nodeEnv: env.nodeEnv });
 });
-
