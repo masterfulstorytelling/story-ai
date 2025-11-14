@@ -5,6 +5,7 @@ TDD: These tests are written FIRST and should FAIL until the report generator is
 """
 
 import pytest
+import fitz  # PyMuPDF
 
 
 class TestReportGenerator:
@@ -41,8 +42,11 @@ class TestReportGenerator:
 
         pdf_content = generate_pdf_report(report_data)
 
-        # Count pages in PDF (simplified check)
-        page_count = pdf_content.count(b"/Type /Page")
+        # Use PyMuPDF to properly count pages
+        pdf_doc = fitz.open(stream=pdf_content, filetype="pdf")
+        page_count = len(pdf_doc)
+        pdf_doc.close()
+
         assert 2 <= page_count <= 5
 
     def test_includes_all_required_sections(self):
@@ -63,8 +67,12 @@ class TestReportGenerator:
 
         pdf_content = generate_pdf_report(report_data)
 
-        # Convert to text for checking (simplified)
-        pdf_text = pdf_content.decode("utf-8", errors="ignore")
+        # Use PyMuPDF to extract text from PDF
+        pdf_doc = fitz.open(stream=pdf_content, filetype="pdf")
+        pdf_text = ""
+        for page in pdf_doc:
+            pdf_text += page.get_text()
+        pdf_doc.close()
 
         # Check that all sections are present
         assert "Executive Summary" in pdf_text or "executive" in pdf_text.lower()
@@ -84,7 +92,13 @@ class TestReportGenerator:
 
         pdf_content = generate_pdf_report(report_data)
 
-        pdf_text = pdf_content.decode("utf-8", errors="ignore")
+        # Use PyMuPDF to extract text from PDF
+        pdf_doc = fitz.open(stream=pdf_content, filetype="pdf")
+        pdf_text = ""
+        for page in pdf_doc:
+            pdf_text += page.get_text()
+        pdf_doc.close()
+
         assert "Test quote" in pdf_text or "citation" in pdf_text.lower()
 
     def test_handles_empty_data(self):
