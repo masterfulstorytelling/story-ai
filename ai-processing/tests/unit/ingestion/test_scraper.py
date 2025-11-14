@@ -77,11 +77,13 @@ class TestWebScraper:
         """Test handling of timeout errors."""
         from src.ingestion.scraper import scrape_website, ScrapingError
 
-        url = "https://httpbin.org/delay/10"
+        # Use a URL that robots.txt allows but will timeout with very short timeout
+        # python.org is allowed and has sufficient content, but with 1ms timeout it should fail
+        url = "https://www.python.org"
 
         # Mock timeout scenario - use very short timeout
         with pytest.raises(ScrapingError) as exc_info:
-            scrape_website(url, timeout=100)  # 100ms timeout
+            scrape_website(url, timeout=1)  # 1ms timeout - should timeout
 
         assert "timeout" in str(exc_info.value).lower() or "time" in str(exc_info.value).lower()
 
@@ -90,8 +92,9 @@ class TestWebScraper:
         """Test that scraper follows redirects."""
         from src.ingestion.scraper import scrape_website
 
-        # httpbin.org has a redirect endpoint that redirects to a page with content
-        url = "https://httpbin.org/redirect-to?url=https://www.python.org"
+        # Use python.org which redirects from http to https and is allowed by robots.txt
+        # http://www.python.org redirects to https://www.python.org
+        url = "http://www.python.org"
 
         result = scrape_website(url)
 
