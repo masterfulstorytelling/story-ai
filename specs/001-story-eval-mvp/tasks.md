@@ -167,11 +167,11 @@
 #### Report Generation
 
 - [X] T085 [US2] Implement PDF report generator in ai-processing/src/report/generator.py (WeasyPrint, 2-5 pages, all sections)
-- [ ] T086 [US2] Create report template in ai-processing/src/report/templates/report_template.html (executive summary, audience analysis, assessments, recommendations)
+- [X] T086 [US2] Create report template in ai-processing/src/report/templates/report_template.html (executive summary, audience analysis, assessments, recommendations)
 
 #### Backend Integration
 
-- [ ] T087 [US2] Create Cloud Tasks handler for processing in backend/src/api/handlers/processEvaluation.ts
+- [X] T087 [US2] Create Cloud Tasks handler for processing in backend/src/api/handlers/processEvaluation.ts
 - [ ] T088 [US2] Implement AI processing API client in backend/src/services/aiProcessingService.ts (calls FastAPI service)
 - [ ] T089 [US2] Implement report delivery service in backend/src/services/reportDeliveryService.ts (email with PDF attachment)
 - [ ] T090 [US2] Create GET /evaluations/:id endpoint in backend/src/api/routes/evaluationRoutes.ts (status check)
