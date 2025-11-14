@@ -1,6 +1,6 @@
 /**
  * Integration test for submission flow
- * 
+ *
  * Tests the complete submission flow:
  * 1. User submits URL or files via POST /evaluations
  * 2. System validates input
@@ -8,7 +8,7 @@
  * 4. System stores submission in Firestore
  * 5. System queues processing task
  * 6. System sends email confirmation
- * 
+ *
  * TDD: This test is written FIRST and should FAIL until implementation is complete.
  */
 
@@ -42,9 +42,7 @@ describe('Submission Flow Integration Tests', () => {
         user_provided_audience: 'CFOs at Fortune 500 companies',
       };
 
-      const response = await request(app)
-        .post('/v1/evaluations')
-        .send(submissionData);
+      const response = await request(app).post('/v1/evaluations').send(submissionData);
 
       // Once implemented, should return 201
       if (response.status === 201) {
@@ -66,7 +64,7 @@ describe('Submission Flow Integration Tests', () => {
 
         // Verify Cloud Task was queued
         expect(TaskService.prototype.queueProcessingTask).toHaveBeenCalledWith(
-          expect.any(String), // evaluation request ID
+          expect.any(String) // evaluation request ID
         );
 
         // Verify email was sent
@@ -116,11 +114,9 @@ describe('Submission Flow Integration Tests', () => {
 
   describe('Validation errors', () => {
     it('should return 400 when email is missing', async () => {
-      const response = await request(app)
-        .post('/v1/evaluations')
-        .send({
-          url: 'https://example.com',
-        });
+      const response = await request(app).post('/v1/evaluations').send({
+        url: 'https://example.com',
+      });
 
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('error');
@@ -131,11 +127,9 @@ describe('Submission Flow Integration Tests', () => {
     });
 
     it('should return 400 when both URL and files are missing', async () => {
-      const response = await request(app)
-        .post('/v1/evaluations')
-        .send({
-          email: 'user@example.com',
-        });
+      const response = await request(app).post('/v1/evaluations').send({
+        email: 'user@example.com',
+      });
 
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('error');
@@ -199,12 +193,10 @@ describe('Submission Flow Integration Tests', () => {
         new Error('Firestore connection failed')
       );
 
-      const response = await request(app)
-        .post('/v1/evaluations')
-        .send({
-          email: 'user@example.com',
-          url: 'https://example.com',
-        });
+      const response = await request(app).post('/v1/evaluations').send({
+        email: 'user@example.com',
+        url: 'https://example.com',
+      });
 
       if (response.status === 500) {
         expect(response.body).toHaveProperty('error');
@@ -218,12 +210,10 @@ describe('Submission Flow Integration Tests', () => {
         new Error('Email service unavailable')
       );
 
-      const response = await request(app)
-        .post('/v1/evaluations')
-        .send({
-          email: 'user@example.com',
-          url: 'https://example.com',
-        });
+      const response = await request(app).post('/v1/evaluations').send({
+        email: 'user@example.com',
+        url: 'https://example.com',
+      });
 
       // Email failure should not prevent submission from being created
       // But should be logged
@@ -242,9 +232,7 @@ describe('Submission Flow Integration Tests', () => {
       }));
 
       const responses = await Promise.all(
-        submissions.map((data) =>
-          request(app).post('/v1/evaluations').send(data)
-        )
+        submissions.map((data) => request(app).post('/v1/evaluations').send(data))
       );
 
       // All should succeed (assuming rate limits not exceeded)
@@ -257,4 +245,3 @@ describe('Submission Flow Integration Tests', () => {
     });
   });
 });
-

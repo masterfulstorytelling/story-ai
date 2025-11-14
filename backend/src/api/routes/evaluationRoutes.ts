@@ -1,10 +1,11 @@
 /**
  * Evaluation routes
- * 
+ *
  * POST /evaluations - Submit content for evaluation
  */
 
 import { Router, Request, Response } from 'express';
+import type multer from 'multer';
 import { validateSubmission } from '../middleware/validation';
 import { rateLimiter } from '../middleware/rateLimiter';
 import { fileUploadMiddleware } from '../middleware/fileUpload';
@@ -26,7 +27,7 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       const { email, url, user_provided_audience } = req.body;
-      const files = req.files as Express.Multer.File[] | undefined;
+      const files = req.files as multer.File[] | undefined;
 
       // Create submission
       const submission = await createSubmission({
@@ -66,4 +67,3 @@ router.post(
 );
 
 export default router;
-

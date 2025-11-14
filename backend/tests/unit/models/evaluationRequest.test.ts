@@ -1,6 +1,6 @@
 /**
  * Unit tests for EvaluationRequest model validation
- * 
+ *
  * TDD: These tests are written FIRST and should FAIL until the model is implemented.
  */
 
@@ -59,7 +59,7 @@ describe('EvaluationRequest Model', () => {
       expect(() => {
         new EvaluationRequest({
           url: 'https://example.com',
-        } as any);
+        } as unknown as { url: string });
       }).toThrow('Email is required');
     });
 
@@ -178,7 +178,7 @@ describe('EvaluationRequest Model', () => {
             {
               filename: 'document.txt',
               file_path: 'gs://bucket/document.txt',
-              file_type: 'txt' as any,
+              file_type: 'txt' as 'pdf' | 'pptx' | 'docx',
               file_size: 1024,
               uploaded_at: new Date(),
             },
@@ -334,7 +334,7 @@ describe('EvaluationRequest Model', () => {
         submitted_at: '2025-11-13T12:00:00Z',
       };
 
-      const request = EvaluationRequest.fromJSON(json);
+      const request = EvaluationRequest.fromJSON(json as Record<string, unknown>);
 
       expect(request.id).toBe(json.id);
       expect(request.email).toBe(json.email);
@@ -344,4 +344,3 @@ describe('EvaluationRequest Model', () => {
     });
   });
 });
-

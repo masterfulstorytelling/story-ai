@@ -107,4 +107,3 @@ describe('Logger', () => {
     process.env.NODE_ENV = originalEnv;
   });
 });
-

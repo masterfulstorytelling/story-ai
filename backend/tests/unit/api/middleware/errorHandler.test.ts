@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { errorHandler, notFoundHandler, AppError } from '../../../../src/api/middleware/errorHandler';
+import {
+  errorHandler,
+  notFoundHandler,
+  AppError,
+} from '../../../../src/api/middleware/errorHandler';
 import { logger } from '../../../../src/utils/logger';
 
 jest.mock('../../../../src/utils/logger');
@@ -118,4 +122,3 @@ describe('Error Handler Middleware', () => {
     });
   });
 });
-

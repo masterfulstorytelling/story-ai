@@ -100,4 +100,3 @@ describe('Environment Configuration', () => {
     expect(typeof config.port).toBe('number');
   });
 });
-

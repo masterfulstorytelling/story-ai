@@ -1,10 +1,10 @@
 /**
  * Rate limiting service
- * 
+ *
  * Enforces rate limits:
  * - 3 submissions per email address per 24 hours
  * - 5 submissions per IP address per hour
- * 
+ *
  * Uses in-memory storage for MVP (can be upgraded to Redis for production).
  */
 
@@ -140,10 +140,7 @@ export class RateLimitService {
   /**
    * Check combined rate limits (both email and IP)
    */
-  async checkCombinedLimit(
-    email: string,
-    ip: string
-  ): Promise<CombinedRateLimitResult> {
+  async checkCombinedLimit(email: string, ip: string): Promise<CombinedRateLimitResult> {
     const emailResult = await this.checkEmailLimit(email);
     const ipResult = await this.checkIPLimit(ip);
 
@@ -222,4 +219,3 @@ export class RateLimitService {
     };
   }
 }
-

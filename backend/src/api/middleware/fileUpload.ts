@@ -1,6 +1,6 @@
 /**
  * File upload middleware using Multer
- * 
+ *
  * Handles multipart/form-data file uploads with:
  * - 50MB file size limit
  * - Multiple file support
@@ -8,7 +8,7 @@
  */
 
 import multer from 'multer';
-import { Request } from 'express';
+import type { Request } from 'express';
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 const MAX_FILES = 10; // Maximum number of files per submission
@@ -17,11 +17,7 @@ const MAX_FILES = 10; // Maximum number of files per submission
 const storage = multer.memoryStorage();
 
 // File filter to accept only PDF, PPTX, DOCX
-const fileFilter = (
-  _req: Request,
-  file: Express.Multer.File,
-  cb: multer.FileFilterCallback
-): void => {
+const fileFilter = (_req: Request, file: multer.File, cb: multer.FileFilterCallback): void => {
   const allowedMimeTypes = [
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.presentationml.presentation', // PPTX
@@ -45,9 +41,7 @@ const fileFilter = (
 
   // Reject file
   cb(
-    new Error(
-      `Unsupported file type. Allowed types: PDF, PPTX, DOCX. Received: ${file.mimetype}`
-    )
+    new Error(`Unsupported file type. Allowed types: PDF, PPTX, DOCX. Received: ${file.mimetype}`)
   );
 };
 
@@ -69,4 +63,3 @@ export const upload = multer({
 // Middleware for handling file uploads
 // Field name: 'files' (supports multiple files)
 export const fileUploadMiddleware = upload.array('files', MAX_FILES);
-

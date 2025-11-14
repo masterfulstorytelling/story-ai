@@ -1,6 +1,6 @@
 /**
  * Validation middleware for evaluation submissions
- * 
+ *
  * Validates:
  * - Email format (required)
  * - URL format and protocol (HTTP/HTTPS only, optional)
@@ -9,11 +9,12 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
+import type multer from 'multer';
 
 export interface ValidationError {
   error: string;
   message: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -25,11 +26,7 @@ const ALLOWED_FILE_TYPES = [
 
 const ALLOWED_FILE_EXTENSIONS = ['.pdf', '.pptx', '.docx'];
 
-export function validateSubmission(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void {
+export function validateSubmission(req: Request, res: Response, next: NextFunction): void {
   const errors: ValidationError[] = [];
 
   // Validate email (required)
@@ -56,7 +53,7 @@ export function validateSubmission(
   }
 
   // Validate files if provided
-  const files = req.files as Express.Multer.File[] | undefined;
+  const files = req.files as multer.File[] | undefined;
   if (files && files.length > 0) {
     for (const file of files) {
       const fileError = validateFile(file);
@@ -107,7 +104,7 @@ function isValidURL(url: string): boolean {
   }
 }
 
-function validateFile(file: Express.Multer.File): ValidationError | null {
+function validateFile(file: multer.File): ValidationError | null {
   // Check file size
   if (file.size > MAX_FILE_SIZE) {
     return {
@@ -152,4 +149,3 @@ function getFileExtension(filename: string): string {
 function containsPathTraversal(filename: string): boolean {
   return filename.includes('..') || filename.includes('/') || filename.includes('\\');
 }
-

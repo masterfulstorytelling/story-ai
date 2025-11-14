@@ -1,15 +1,16 @@
 /**
  * Unit tests for validation middleware
- * 
+ *
  * Tests validation for:
  * - URL format and accessibility
  * - Email format
  * - File format and size
- * 
+ *
  * TDD: These tests are written FIRST and should FAIL until the middleware is implemented.
  */
 
 import { Request, Response } from 'express';
+import type multer from 'multer';
 import { validateSubmission } from '../../../src/api/middleware/validation';
 
 describe('Validation Middleware', () => {
@@ -43,11 +44,7 @@ describe('Validation Middleware', () => {
         url: 'https://example.com',
       };
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
       expect(responseStatus).not.toHaveBeenCalled();
@@ -58,11 +55,7 @@ describe('Validation Middleware', () => {
         url: 'https://example.com',
       };
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).not.toHaveBeenCalled();
       expect(responseStatus).toHaveBeenCalledWith(400);
@@ -77,11 +70,7 @@ describe('Validation Middleware', () => {
         url: 'https://example.com',
       };
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).not.toHaveBeenCalled();
       expect(responseStatus).toHaveBeenCalledWith(400);
@@ -107,11 +96,7 @@ describe('Validation Middleware', () => {
           url: 'https://example.com',
         };
 
-        validateSubmission(
-          mockRequest as Request,
-          mockResponse as Response,
-          mockNext
-        );
+        validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
         expect(mockNext).toHaveBeenCalled();
         mockNext.mockClear();
@@ -126,11 +111,7 @@ describe('Validation Middleware', () => {
         url: 'https://example.com',
       };
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
     });
@@ -141,11 +122,7 @@ describe('Validation Middleware', () => {
         url: 'http://example.com',
       };
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
     });
@@ -156,11 +133,7 @@ describe('Validation Middleware', () => {
         url: 'not-a-valid-url',
       };
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).not.toHaveBeenCalled();
       expect(responseStatus).toHaveBeenCalledWith(400);
@@ -181,11 +154,7 @@ describe('Validation Middleware', () => {
           url,
         };
 
-        validateSubmission(
-          mockRequest as Request,
-          mockResponse as Response,
-          mockNext
-        );
+        validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
         expect(mockNext).not.toHaveBeenCalled();
         expect(responseStatus).toHaveBeenCalledWith(400);
@@ -200,11 +169,7 @@ describe('Validation Middleware', () => {
         url: 'https://example.com/path/to/page?param=value',
       };
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
     });
@@ -217,11 +182,7 @@ describe('Validation Middleware', () => {
         url: 'https://example.com',
       };
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
     });
@@ -241,14 +202,10 @@ describe('Validation Middleware', () => {
           filename: 'document.pdf',
           path: '/tmp/document.pdf',
           buffer: Buffer.from('test'),
-        } as Express.Multer.File,
+        } as multer.File,
       ];
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
     });
@@ -259,11 +216,7 @@ describe('Validation Middleware', () => {
       };
       mockRequest.files = [];
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).not.toHaveBeenCalled();
       expect(responseStatus).toHaveBeenCalledWith(400);
@@ -287,14 +240,10 @@ describe('Validation Middleware', () => {
           originalname: 'document.pdf',
           mimetype: 'application/pdf',
           size: 1024000, // 1MB
-        } as Express.Multer.File,
+        } as multer.File,
       ];
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
     });
@@ -309,14 +258,10 @@ describe('Validation Middleware', () => {
           originalname: 'presentation.pptx',
           mimetype: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
           size: 2048000, // 2MB
-        } as Express.Multer.File,
+        } as multer.File,
       ];
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
     });
@@ -331,14 +276,10 @@ describe('Validation Middleware', () => {
           originalname: 'document.docx',
           mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
           size: 512000, // 512KB
-        } as Express.Multer.File,
+        } as multer.File,
       ];
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
     });
@@ -353,14 +294,10 @@ describe('Validation Middleware', () => {
           originalname: 'document.txt',
           mimetype: 'text/plain',
           size: 1024,
-        } as Express.Multer.File,
+        } as multer.File,
       ];
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).not.toHaveBeenCalled();
       expect(responseStatus).toHaveBeenCalledWith(400);
@@ -379,14 +316,10 @@ describe('Validation Middleware', () => {
           originalname: 'large.pdf',
           mimetype: 'application/pdf',
           size: maxSize + 1,
-        } as Express.Multer.File,
+        } as multer.File,
       ];
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).not.toHaveBeenCalled();
       expect(responseStatus).toHaveBeenCalledWith(413);
@@ -409,14 +342,10 @@ describe('Validation Middleware', () => {
           originalname: 'large.pdf',
           mimetype: 'application/pdf',
           size: maxSize,
-        } as Express.Multer.File,
+        } as multer.File,
       ];
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
     });
@@ -438,13 +367,9 @@ describe('Validation Middleware', () => {
           mimetype: 'application/pdf',
           size: 2048000,
         },
-      ] as Express.Multer.File[];
+      ] as multer.File[];
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
     });
@@ -458,11 +383,7 @@ describe('Validation Middleware', () => {
         user_provided_audience: 'CFOs at Fortune 500 companies',
       };
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
     });
@@ -473,14 +394,9 @@ describe('Validation Middleware', () => {
         url: 'https://example.com',
       };
 
-      validateSubmission(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
+      validateSubmission(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
     });
   });
 });
-

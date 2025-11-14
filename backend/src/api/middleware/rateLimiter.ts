@@ -1,6 +1,6 @@
 /**
  * Rate limiter middleware
- * 
+ *
  * Wraps RateLimitService to provide Express middleware for rate limiting.
  * Extracts email and IP from request and checks combined limits.
  */
@@ -18,9 +18,7 @@ function getClientIP(req: Request): string {
   // Check X-Forwarded-For header (first IP in chain)
   const forwardedFor = req.headers['x-forwarded-for'];
   if (forwardedFor) {
-    const ips = Array.isArray(forwardedFor)
-      ? forwardedFor[0]
-      : forwardedFor.split(',')[0].trim();
+    const ips = Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor.split(',')[0].trim();
     return ips;
   }
 
@@ -32,11 +30,7 @@ function getClientIP(req: Request): string {
  * Rate limiter middleware
  * Checks both email and IP rate limits
  */
-export async function rateLimiter(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
+export async function rateLimiter(req: Request, res: Response, next: NextFunction): Promise<void> {
   const email = req.body.email;
   const ip = getClientIP(req);
 
@@ -60,16 +54,10 @@ export async function rateLimiter(
       res.setHeader('X-RateLimit-Remaining-IP', result.ipLimit?.remaining || 0);
 
       if (result.emailLimit?.resetAt) {
-        res.setHeader(
-          'X-RateLimit-Reset-Email',
-          result.emailLimit.resetAt.getTime().toString()
-        );
+        res.setHeader('X-RateLimit-Reset-Email', result.emailLimit.resetAt.getTime().toString());
       }
       if (result.ipLimit?.resetAt) {
-        res.setHeader(
-          'X-RateLimit-Reset-IP',
-          result.ipLimit.resetAt.getTime().toString()
-        );
+        res.setHeader('X-RateLimit-Reset-IP', result.ipLimit.resetAt.getTime().toString());
       }
 
       // Return 429 with appropriate message
@@ -97,20 +85,14 @@ export async function rateLimiter(
       res.setHeader('X-RateLimit-Limit-Email', '3');
       res.setHeader('X-RateLimit-Remaining-Email', result.emailLimit.remaining);
       if (result.emailLimit.resetAt) {
-        res.setHeader(
-          'X-RateLimit-Reset-Email',
-          result.emailLimit.resetAt.getTime().toString()
-        );
+        res.setHeader('X-RateLimit-Reset-Email', result.emailLimit.resetAt.getTime().toString());
       }
     }
     if (result.ipLimit) {
       res.setHeader('X-RateLimit-Limit-IP', '5');
       res.setHeader('X-RateLimit-Remaining-IP', result.ipLimit.remaining);
       if (result.ipLimit.resetAt) {
-        res.setHeader(
-          'X-RateLimit-Reset-IP',
-          result.ipLimit.resetAt.getTime().toString()
-        );
+        res.setHeader('X-RateLimit-Reset-IP', result.ipLimit.resetAt.getTime().toString());
       }
     }
 
@@ -122,4 +104,3 @@ export async function rateLimiter(
     next();
   }
 }
-

@@ -1,6 +1,6 @@
 /**
  * EvaluationRequest model
- * 
+ *
  * Represents a user's submission of content for evaluation.
  * Validates input and manages state transitions.
  */
@@ -176,7 +176,7 @@ export class EvaluationRequest {
   }
 
   // Serialization methods
-  toJSON(): Record<string, any> {
+  toJSON(): Record<string, unknown> {
     return {
       id: this.id,
       email: this.email,
@@ -195,25 +195,29 @@ export class EvaluationRequest {
     };
   }
 
-  static fromJSON(json: Record<string, any>): EvaluationRequest {
+  static fromJSON(json: Record<string, unknown>): EvaluationRequest {
     return new EvaluationRequest({
-      id: json.id,
-      email: json.email,
-      url: json.url,
-      uploaded_files: json.uploaded_files?.map((f: any) => ({
-        ...f,
-        uploaded_at: new Date(f.uploaded_at),
-      })),
-      user_provided_audience: json.user_provided_audience,
-      status: json.status,
-      submitted_at: new Date(json.submitted_at),
+      id: json.id as string,
+      email: json.email as string,
+      url: json.url as string | undefined,
+      uploaded_files: (json.uploaded_files as Array<Record<string, unknown>> | undefined)?.map(
+        (f) => ({
+          filename: f.filename as string,
+          file_path: f.file_path as string,
+          file_type: f.file_type as 'pdf' | 'pptx' | 'docx',
+          file_size: f.file_size as number,
+          uploaded_at: new Date(f.uploaded_at as string),
+        })
+      ),
+      user_provided_audience: json.user_provided_audience as string | undefined,
+      status: json.status as 'pending' | 'processing' | 'completed' | 'failed' | undefined,
+      submitted_at: json.submitted_at ? new Date(json.submitted_at as string) : undefined,
       processing_started_at: json.processing_started_at
-        ? new Date(json.processing_started_at)
+        ? new Date(json.processing_started_at as string)
         : undefined,
-      completed_at: json.completed_at ? new Date(json.completed_at) : undefined,
-      error_message: json.error_message,
-      report_id: json.report_id,
+      completed_at: json.completed_at ? new Date(json.completed_at as string) : undefined,
+      error_message: json.error_message as string | undefined,
+      report_id: json.report_id as string | undefined,
     });
   }
 }
-

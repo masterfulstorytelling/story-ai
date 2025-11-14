@@ -1,12 +1,12 @@
 /**
  * Submission service
- * 
+ *
  * Orchestrates the submission flow:
  * 1. Create EvaluationRequest model
  * 2. Upload files to Cloud Storage (if any)
  * 3. Store evaluation request in Firestore
  * 4. Queue processing task
- * 
+ *
  * Depends on: EvaluationRequest model, FirestoreService, StorageService, TaskService
  */
 
@@ -16,11 +16,12 @@ import { getBucket, BUCKETS } from './storageService';
 import { createTask, TaskPayload } from './taskService';
 import { logger } from '../utils/logger';
 import { randomUUID } from 'crypto';
+import type multer from 'multer';
 
 export interface SubmissionData {
   email: string;
   url?: string;
-  files?: Express.Multer.File[];
+  files?: multer.File[];
   user_provided_audience?: string;
 }
 
@@ -35,9 +36,7 @@ export interface SubmissionResult {
 /**
  * Process file uploads and return FileReference array
  */
-async function processFileUploads(
-  files: Express.Multer.File[]
-): Promise<FileReference[]> {
+async function processFileUploads(files: multer.File[]): Promise<FileReference[]> {
   const bucket = getBucket(BUCKETS.UPLOADS);
   const fileReferences: FileReference[] = [];
 
@@ -95,9 +94,7 @@ function getFileTypeFromExtension(extension: string): 'pdf' | 'pptx' | 'docx' {
 /**
  * Create evaluation request submission
  */
-export async function createSubmission(
-  data: SubmissionData
-): Promise<SubmissionResult> {
+export async function createSubmission(data: SubmissionData): Promise<SubmissionResult> {
   try {
     // Process file uploads if any
     let uploadedFiles: FileReference[] | undefined;
@@ -115,9 +112,7 @@ export async function createSubmission(
 
     // Store in Firestore
     const firestore = getFirestore();
-    const docRef = firestore
-      .collection(COLLECTIONS.EVALUATION_REQUESTS)
-      .doc(evaluationRequest.id);
+    const docRef = firestore.collection(COLLECTIONS.EVALUATION_REQUESTS).doc(evaluationRequest.id);
 
     await docRef.set(evaluationRequest.toJSON());
 
@@ -141,9 +136,7 @@ export async function createSubmission(
 
     // Calculate estimated completion time (5-10 minutes from now)
     const estimatedCompletionTime = new Date();
-    estimatedCompletionTime.setMinutes(
-      estimatedCompletionTime.getMinutes() + 10
-    );
+    estimatedCompletionTime.setMinutes(estimatedCompletionTime.getMinutes() + 10);
 
     return {
       id: evaluationRequest.id,
@@ -162,4 +155,3 @@ export async function createSubmission(
     throw error;
   }
 }
-

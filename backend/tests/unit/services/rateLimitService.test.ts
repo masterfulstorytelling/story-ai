@@ -1,10 +1,10 @@
 /**
  * Unit tests for rate limiting service
- * 
+ *
  * Requirements:
  * - 3 submissions per email address per 24 hours
  * - 5 submissions per IP address per hour
- * 
+ *
  * TDD: These tests are written FIRST and should FAIL until the service is implemented.
  */
 
@@ -224,4 +224,3 @@ describe('RateLimitService', () => {
     });
   });
 });
-

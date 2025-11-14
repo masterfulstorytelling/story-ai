@@ -15,4 +15,3 @@ describe('Health Check Endpoint', () => {
     expect(new Date(response.body.timestamp).getTime()).toBeGreaterThan(0);
   });
 });
-
