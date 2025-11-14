@@ -55,7 +55,14 @@ describe('Processing Flow Integration', () => {
   let app: Application;
 
   beforeAll(() => {
+    // Mocks must be set up before getApp() is called
+    // getApp() imports routes which import services
     app = getApp();
+  });
+
+  beforeEach(() => {
+    // Clear all mocks before each test
+    jest.clearAllMocks();
   });
 
   it('should process evaluation request end-to-end', async () => {

@@ -17,12 +17,21 @@ import express from 'express';
 import routes from '../../src/api/routes';
 
 // Mock services - these are function-based, not class-based
-jest.mock('../../src/services/firestoreService', () => ({
-  getFirestore: jest.fn(),
-  COLLECTIONS: {
-    EVALUATION_REQUESTS: 'evaluation_requests',
-  },
-}));
+jest.mock('../../src/services/firestoreService', () => {
+  const mockCollection = {
+    doc: jest.fn(() => ({
+      set: jest.fn().mockResolvedValue(undefined),
+    })),
+  };
+  return {
+    getFirestore: jest.fn(() => ({
+      collection: jest.fn(() => mockCollection),
+    })),
+    COLLECTIONS: {
+      EVALUATION_REQUESTS: 'evaluation_requests',
+    },
+  };
+});
 
 jest.mock('../../src/services/taskService', () => ({
   createTask: jest.fn(),
