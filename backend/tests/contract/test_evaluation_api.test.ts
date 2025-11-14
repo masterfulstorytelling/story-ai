@@ -11,6 +11,43 @@ import request from 'supertest';
 import express from 'express';
 import routes from '../../src/api/routes';
 
+// Mock services for contract tests - these should work without real GCP services
+jest.mock('../../src/services/firestoreService', () => {
+  const mockCollection = {
+    doc: jest.fn(() => ({
+      set: jest.fn().mockResolvedValue(undefined),
+    })),
+  };
+  return {
+    getFirestore: jest.fn(() => ({
+      collection: jest.fn(() => mockCollection),
+    })),
+    COLLECTIONS: {
+      EVALUATION_REQUESTS: 'evaluation_requests',
+    },
+  };
+});
+
+jest.mock('../../src/services/storageService', () => ({
+  getBucket: jest.fn(() => ({
+    file: jest.fn(() => ({
+      save: jest.fn().mockResolvedValue(undefined),
+    })),
+  })),
+  BUCKETS: {
+    UPLOADS: 'storyai-uploads',
+  },
+}));
+
+jest.mock('../../src/services/taskService', () => ({
+  createTask: jest.fn().mockResolvedValue('task-id'),
+}));
+
+jest.mock('../../src/services/emailService', () => ({
+  sendEmail: jest.fn().mockResolvedValue(undefined),
+  initializeEmailService: jest.fn(),
+}));
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
