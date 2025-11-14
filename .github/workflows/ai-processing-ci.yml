@@ -33,6 +33,10 @@ jobs:
           pip install -r requirements.txt
           pip install black flake8 mypy
       
+      - name: Install Playwright browsers
+        working-directory: ./ai-processing
+        run: playwright install chromium
+      
       - name: Run Black (format check)
         working-directory: ./ai-processing
         run: black --check src/

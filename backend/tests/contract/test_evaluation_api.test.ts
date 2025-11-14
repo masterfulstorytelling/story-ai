@@ -45,6 +45,7 @@ jest.mock('../../src/services/taskService', () => ({
 
 jest.mock('../../src/services/emailService', () => ({
   sendEmail: jest.fn().mockResolvedValue(undefined),
+  sendConfirmationEmail: jest.fn().mockResolvedValue(undefined),
   initializeEmailService: jest.fn(),
 }));
 

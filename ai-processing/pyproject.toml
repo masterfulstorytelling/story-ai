@@ -37,3 +37,8 @@ ignore = [
     'W503',  # line break before binary operator
 ]
 
+[tool.pytest.ini_options]
+markers = [
+    "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+]
+

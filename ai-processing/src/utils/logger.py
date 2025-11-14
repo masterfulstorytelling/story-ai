@@ -49,3 +49,8 @@ def setup_logger(name: str = "ai-processing", level: str = "INFO") -> logging.Lo
 
 # Global logger instance
 logger = setup_logger()
+
+
+def get_logger(name: str = "ai-processing") -> logging.Logger:
+    """Get or create a logger instance (alias for setup_logger)."""
+    return setup_logger(name)

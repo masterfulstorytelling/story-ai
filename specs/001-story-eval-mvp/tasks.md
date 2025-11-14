@@ -80,8 +80,8 @@
 - [ ] T032 [P] [US1] Unit test for rate limiting service in backend/tests/unit/services/rateLimitService.test.ts
 - [ ] T033 [P] [US1] Unit test for validation middleware in backend/tests/unit/middleware/validation.test.ts
 - [ ] T034 [P] [US1] Integration test for submission flow in backend/tests/integration/test_submission_flow.test.ts
-- [ ] T035 [P] [US1] Unit test for EvaluationForm component in frontend/tests/unit/components/EvaluationForm.test.ts
-- [ ] T036 [P] [US1] E2E test for form submission in frontend/tests/e2e/submit_evaluation.spec.ts
+- [X] T035 [P] [US1] Unit test for EvaluationForm component in frontend/tests/unit/components/EvaluationForm.test.ts
+- [X] T036 [P] [US1] E2E test for form submission in frontend/tests/e2e/submit_evaluation.spec.ts
 
 ### Implementation for User Story 1
 
@@ -94,15 +94,15 @@
 - [ ] T043 [US1] Implement file upload handler in backend/src/api/middleware/fileUpload.ts (Multer, 50MB limit)
 - [ ] T044 [US1] Implement POST /evaluations endpoint in backend/src/api/routes/evaluationRoutes.ts (depends on T042, T043, T040, T041)
 - [ ] T045 [US1] Implement email confirmation service in backend/src/services/emailService.ts (SendGrid, estimated wait time)
-- [ ] T046 [US1] Create EvaluationForm component in frontend/src/components/EvaluationForm.vue
-- [ ] T047 [US1] Create ConfirmationMessage component in frontend/src/components/ConfirmationMessage.vue
-- [ ] T048 [US1] Create ErrorDisplay component in frontend/src/components/ErrorDisplay.vue
-- [ ] T049 [US1] Implement API client service in frontend/src/services/api.ts
-- [ ] T050 [US1] Create SubmitEvaluation page in frontend/src/pages/SubmitEvaluation.vue (depends on T046, T047, T048, T049)
-- [ ] T051 [US1] Setup Vue router and main app entry in frontend/src/main.ts (depends on T050)
-- [ ] T052 [US1] Add form validation logic in frontend/src/components/EvaluationForm.vue (client-side validation)
-- [ ] T053 [US1] Integrate Cloud Tasks for async processing queue in backend/src/services/taskService.ts (depends on T044)
-- [ ] T108 [US1] Verify all User Story 1 tests pass before proceeding to User Story 2 (TDD checkpoint: run all tests T030-T036, ensure 100% pass rate)
+- [X] T046 [US1] Create EvaluationForm component in frontend/src/components/EvaluationForm.vue
+- [X] T047 [US1] Create ConfirmationMessage component in frontend/src/components/ConfirmationMessage.vue
+- [X] T048 [US1] Create ErrorDisplay component in frontend/src/components/ErrorDisplay.vue
+- [X] T049 [US1] Implement API client service in frontend/src/services/api.ts
+- [X] T050 [US1] Create SubmitEvaluation page in frontend/src/pages/SubmitEvaluation.vue (depends on T046, T047, T048, T049)
+- [X] T051 [US1] Setup Vue router and main app entry in frontend/src/main.ts (depends on T050)
+- [X] T052 [US1] Add form validation logic in frontend/src/components/EvaluationForm.vue (client-side validation)
+- [X] T053 [US1] Integrate Cloud Tasks for async processing queue in backend/src/services/taskService.ts (depends on T044)
+- [X] T108 [US1] Verify all User Story 1 tests pass before proceeding to User Story 2 (TDD checkpoint: run all tests T030-T036, ensure 100% pass rate)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently. Users can submit content and receive confirmation.
 
@@ -118,50 +118,50 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T054 [P] [US2] Contract test for agent interfaces in ai-processing/tests/contract/test_agent_interfaces.py
-- [ ] T055 [P] [US2] Unit test for scraper in ai-processing/tests/unit/ingestion/test_scraper.py
-- [ ] T056 [P] [US2] Unit test for file parser in ai-processing/tests/unit/ingestion/test_file_parser.py
-- [ ] T057 [P] [US2] Unit test for citation validation in ai-processing/tests/unit/agents/test_citation_validation.py
-- [ ] T058 [P] [US2] Unit test for report generator in ai-processing/tests/unit/report/test_generator.py
-- [ ] T059 [P] [US2] Integration test for agent pipeline in ai-processing/tests/integration/test_pipeline.py
-- [ ] T060 [P] [US2] Integration test for full processing flow in backend/tests/integration/test_processing_flow.test.ts
+- [X] T054 [P] [US2] Contract test for agent interfaces in ai-processing/tests/contract/test_agent_interfaces.py
+- [X] T055 [P] [US2] Unit test for scraper in ai-processing/tests/unit/ingestion/test_scraper.py
+- [X] T056 [P] [US2] Unit test for file parser in ai-processing/tests/unit/ingestion/test_file_parser.py
+- [X] T057 [P] [US2] Unit test for citation validation in ai-processing/tests/unit/agents/test_citation_validation.py
+- [X] T058 [P] [US2] Unit test for report generator in ai-processing/tests/unit/report/test_generator.py
+- [X] T059 [P] [US2] Integration test for agent pipeline in ai-processing/tests/integration/test_pipeline.py
+- [X] T060 [P] [US2] Integration test for full processing flow in backend/tests/integration/test_processing_flow.test.ts
 
 ### Implementation for User Story 2
 
 #### Content Ingestion
 
-- [ ] T061 [P] [US2] Create ScrapedContent model in ai-processing/src/models/scraped_content.py
-- [ ] T062 [P] [US2] Create ParsedContent model in ai-processing/src/models/parsed_content.py
-- [ ] T063 [P] [US2] Create Section model in ai-processing/src/models/section.py
-- [ ] T064 [P] [US2] Create Page model in ai-processing/src/models/page.py
-- [ ] T065 [US2] Implement web scraper in ai-processing/src/ingestion/scraper.py (Playwright, homepage + About page, robots.txt respect)
-- [ ] T066 [US2] Implement file parser for PDF in ai-processing/src/ingestion/file_parser.py (PyMuPDF/pdfplumber)
-- [ ] T067 [US2] Implement file parser for PPTX in ai-processing/src/ingestion/file_parser.py (python-pptx)
-- [ ] T068 [US2] Implement file parser for DOCX in ai-processing/src/ingestion/file_parser.py (python-docx)
-- [ ] T069 [US2] Create content ingestion service in ai-processing/src/ingestion/ingestion_service.py (depends on T065, T066, T067, T068)
+- [X] T061 [P] [US2] Create ScrapedContent model in ai-processing/src/models/scraped_content.py
+- [X] T062 [P] [US2] Create ParsedContent model in ai-processing/src/models/parsed_content.py
+- [X] T063 [P] [US2] Create Section model in ai-processing/src/models/section.py
+- [X] T064 [P] [US2] Create Page model in ai-processing/src/models/page.py
+- [X] T065 [US2] Implement web scraper in ai-processing/src/ingestion/scraper.py (Playwright, homepage + About page, robots.txt respect)
+- [X] T066 [US2] Implement file parser for PDF in ai-processing/src/ingestion/file_parser.py (PyMuPDF/pdfplumber)
+- [X] T067 [US2] Implement file parser for PPTX in ai-processing/src/ingestion/file_parser.py (python-pptx)
+- [X] T068 [US2] Implement file parser for DOCX in ai-processing/src/ingestion/file_parser.py (python-docx)
+- [X] T069 [US2] Create content ingestion service in ai-processing/src/ingestion/ingestion_service.py (depends on T065, T066, T067, T068)
 
 #### Agent Models
 
-- [ ] T070 [P] [US2] Create Audience model in ai-processing/src/models/audience.py
-- [ ] T071 [P] [US2] Create EvaluationAssessment model in ai-processing/src/models/evaluation_assessment.py
-- [ ] T072 [P] [US2] Create Citation model in ai-processing/src/models/citation.py
-- [ ] T073 [P] [US2] Create EvaluationReport model in ai-processing/src/models/evaluation_report.py
+- [X] T070 [P] [US2] Create Audience model in ai-processing/src/models/audience.py
+- [X] T071 [P] [US2] Create EvaluationAssessment model in ai-processing/src/models/evaluation_assessment.py
+- [X] T072 [P] [US2] Create Citation model in ai-processing/src/models/citation.py
+- [X] T073 [P] [US2] Create EvaluationReport model in ai-processing/src/models/evaluation_report.py
 
 #### AI Agents
 
-- [ ] T074 [US2] Implement Audience Identification Agent in ai-processing/src/agents/audience_identification.py (Claude, incorporates user-provided audience)
-- [ ] T075 [US2] Implement Clarity Agent in ai-processing/src/agents/clarity_agent.py (per audience, assesses what/why/who)
-- [ ] T076 [US2] Implement Technical Level Agent in ai-processing/src/agents/technical_level_agent.py (per audience, too technical/vague/appropriate)
-- [ ] T077 [US2] Implement Importance Agent in ai-processing/src/agents/importance_agent.py (per audience, why should they care)
-- [ ] T078 [US2] Implement Voice Agent in ai-processing/src/agents/voice_agent.py (distinct voice, personality, values, consistency)
-- [ ] T079 [US2] Implement Vividness Agent in ai-processing/src/agents/vividness_agent.py (vivid vs generic, memorability, storytelling)
-- [ ] T080 [US2] Implement Citation Validation Agent in ai-processing/src/agents/citation_validation_agent.py (exact → fuzzy → semantic validation)
-- [ ] T081 [US2] Implement Synthesis/Editor Agent in ai-processing/src/agents/synthesis_agent.py (generates brutally honest report with validated citations)
+- [X] T074 [US2] Implement Audience Identification Agent in ai-processing/src/agents/audience_identification.py (Claude, incorporates user-provided audience)
+- [X] T075 [US2] Implement Clarity Agent in ai-processing/src/agents/clarity_agent.py (per audience, assesses what/why/who)
+- [X] T076 [US2] Implement Technical Level Agent in ai-processing/src/agents/technical_level_agent.py (per audience, too technical/vague/appropriate)
+- [X] T077 [US2] Implement Importance Agent in ai-processing/src/agents/importance_agent.py (per audience, why should they care)
+- [X] T078 [US2] Implement Voice Agent in ai-processing/src/agents/voice_agent.py (distinct voice, personality, values, consistency)
+- [X] T079 [US2] Implement Vividness Agent in ai-processing/src/agents/vividness_agent.py (vivid vs generic, memorability, storytelling)
+- [X] T080 [US2] Implement Citation Validation Agent in ai-processing/src/agents/citation_validation_agent.py (exact → fuzzy → semantic validation)
+- [X] T081 [US2] Implement Synthesis/Editor Agent in ai-processing/src/agents/synthesis_agent.py (generates brutally honest report with validated citations)
 
 #### Orchestration
 
-- [ ] T082 [US2] Create LangGraph state model in ai-processing/src/orchestration/state.py (content, audiences, agent outputs, citations)
-- [ ] T083 [US2] Implement agent pipeline orchestration in ai-processing/src/orchestration/pipeline.py (LangGraph StateGraph, parallel execution)
+- [X] T082 [US2] Create LangGraph state model in ai-processing/src/orchestration/state.py (content, audiences, agent outputs, citations)
+- [X] T083 [US2] Implement agent pipeline orchestration in ai-processing/src/orchestration/pipeline.py (LangGraph StateGraph, parallel execution)
 - [ ] T084 [US2] Create processing service in ai-processing/src/services/processing_service.py (orchestrates ingestion → agents → report)
 
 #### Report Generation
