@@ -62,7 +62,7 @@ def audience_identification_node(state: AgentPipelineState) -> Dict[str, Any]:
         # Re-raise critical failures
         raise
     except Exception as e:
-        logger.error("Critical failure in audience identification", error=e)
+        logger.error("Critical failure in audience identification", exc_info=True)
         raise CriticalFailureError(
             f"Audience identification failed: {str(e)}. "
             "This is a critical failure and processing cannot continue."
@@ -237,7 +237,7 @@ def citation_validation_node(state: AgentPipelineState) -> Dict[str, Any]:
         # Re-raise critical failures
         raise
     except Exception as e:
-        logger.error("Critical failure in citation validation", error=e)
+        logger.error("Critical failure in citation validation", exc_info=True)
         raise CriticalFailureError(
             f"Citation validation failed: {str(e)}. "
             "This is a critical failure and processing cannot continue."
@@ -269,7 +269,7 @@ def synthesis_node(state: AgentPipelineState) -> Dict[str, Any]:
             "status": "completed",
         }
     except Exception as e:
-        logger.error("Error generating report", error=e)
+        logger.error(f"Error generating report: {str(e)}", exc_info=True)
         # Even if synthesis fails, we don't want to fail the entire pipeline
         # Return a basic report noting the limitation
         return {
@@ -380,6 +380,6 @@ def process_evaluation(
         logger.error("Critical failure in pipeline execution - failing fast")
         raise
     except Exception as e:
-        logger.error("Pipeline execution failed", error=e)
+        logger.error("Pipeline execution failed", exc_info=True)
         # For unexpected errors, treat as critical failure
         raise CriticalFailureError(f"Pipeline execution failed: {str(e)}") from e

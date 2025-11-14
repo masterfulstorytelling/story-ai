@@ -11,6 +11,15 @@ def merge_dicts(left: Dict[str, Any], right: Dict[str, Any]) -> Dict[str, Any]:
     return result
 
 
+def merge_lists(left: List[str], right: List[str]) -> List[str]:
+    """Merge two lists, keeping unique values (union)."""
+    result = list(left)  # Copy left list
+    for item in right:
+        if item not in result:
+            result.append(item)
+    return result
+
+
 class AgentPipelineState(TypedDict):
     """State object for agent pipeline orchestration."""
 
@@ -36,4 +45,5 @@ class AgentPipelineState(TypedDict):
     error_message: Optional[str]
 
     # Non-critical agent failures (for partial results tracking)
-    failed_agents: List[str]  # List of agent names that failed
+    # Can be updated by multiple nodes concurrently (e.g., voice and vividness)
+    failed_agents: Annotated[List[str], merge_lists]  # List of agent names that failed
