@@ -4,9 +4,7 @@ from datetime import datetime
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .config.env import env
 from .config.langsmith import configure_langsmith
-from .utils.logger import logger
 
 # Configure LangSmith
 configure_langsmith()

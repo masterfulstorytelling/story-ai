@@ -1,7 +1,6 @@
 """LangSmith configuration for observability."""
 
 import os
-from typing import Optional
 from .env import env
 
 
