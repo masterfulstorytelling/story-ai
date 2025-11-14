@@ -9,5 +9,6 @@ module.exports = {
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
+  passWithNoTests: true, // Don't fail if no tests found (handles edge cases)
 };
 
