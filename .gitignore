@@ -35,6 +35,7 @@ dist/
 *.egg-info/
 .pytest_cache/
 .coverage
+coverage.xml
 htmlcov/
 .mypy_cache/
 .dmypy.json

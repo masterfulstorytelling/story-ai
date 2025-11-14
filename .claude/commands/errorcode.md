@@ -74,6 +74,12 @@ You MUST complete ALL steps in `.cursor/rules/error-investigation.mdc`:
 
 **Document findings**: Write down root cause, fix rationale, evidence, and alternatives.
 
+### Step 7. Could this solution cause new problems?
+- [ ] Trace the new solution through the code and execution. 
+- [ ] Will any new problems arrive? 
+- [ ] Are there other parts of our code that have the same problems? 
+
+
 ## Prohibited Actions
 
 **These are NEVER allowed:**
@@ -98,7 +104,7 @@ You MUST complete ALL steps in `.cursor/rules/error-investigation.mdc`:
 2. **Load**: Read `.cursor/rules/error-investigation.mdc` for full checklist details
 3. **Execute**: Complete ALL 6 steps systematically, documenting findings at each step
 4. **Verify**: Before proposing any fix, verify all steps are complete
-5. **Propose**: Only then propose a fix that addresses the root cause
+5. **Propose**: Only then propose a fix that addresses the root cause and does not cause additional problems
 
 ## Output Format
 
