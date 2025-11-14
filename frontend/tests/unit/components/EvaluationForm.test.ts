@@ -48,7 +48,9 @@ describe('EvaluationForm', () => {
 
     it('should render optional target audience input field', () => {
       const wrapper = mount(EvaluationForm);
-      const audienceInput = wrapper.find('input[placeholder*="audience" i], textarea[placeholder*="audience" i]');
+      const audienceInput = wrapper.find(
+        'input[placeholder*="audience" i], textarea[placeholder*="audience" i]'
+      );
       expect(audienceInput.exists()).toBe(true);
     });
 
@@ -63,9 +65,9 @@ describe('EvaluationForm', () => {
     it('should show error when email is missing on submit', async () => {
       const wrapper = mount(EvaluationForm);
       const form = wrapper.find('form');
-      
+
       await form.trigger('submit');
-      
+
       const errorMessage = wrapper.text();
       expect(errorMessage.toLowerCase()).toContain('email');
     });
@@ -73,11 +75,11 @@ describe('EvaluationForm', () => {
     it('should show error when email format is invalid', async () => {
       const wrapper = mount(EvaluationForm);
       const emailInput = wrapper.find('input[type="email"]');
-      
+
       await emailInput.setValue('invalid-email');
       const form = wrapper.find('form');
       await form.trigger('submit');
-      
+
       const errorMessage = wrapper.text();
       expect(errorMessage.toLowerCase()).toContain('email');
     });
@@ -86,12 +88,12 @@ describe('EvaluationForm', () => {
       const wrapper = mount(EvaluationForm);
       const emailInput = wrapper.find('input[type="email"]');
       const urlInput = wrapper.find('input[type="url"]');
-      
+
       await emailInput.setValue('user@example.com');
       await urlInput.setValue('not-a-valid-url');
       const form = wrapper.find('form');
       await form.trigger('submit');
-      
+
       const errorMessage = wrapper.text();
       expect(errorMessage.toLowerCase()).toContain('url');
     });
@@ -99,11 +101,11 @@ describe('EvaluationForm', () => {
     it('should show error when neither URL nor file is provided', async () => {
       const wrapper = mount(EvaluationForm);
       const emailInput = wrapper.find('input[type="email"]');
-      
+
       await emailInput.setValue('user@example.com');
       const form = wrapper.find('form');
       await form.trigger('submit');
-      
+
       const errorMessage = wrapper.text();
       expect(errorMessage.toLowerCase()).toMatch(/url|file/);
     });
@@ -112,10 +114,10 @@ describe('EvaluationForm', () => {
       const wrapper = mount(EvaluationForm);
       const emailInput = wrapper.find('input[type="email"]');
       const urlInput = wrapper.find('input[type="url"]');
-      
+
       await emailInput.setValue('user@example.com');
       await urlInput.setValue('https://example.com');
-      
+
       // Should not show validation errors for valid inputs
       const errorMessages = wrapper.findAll('.error, [role="alert"]');
       expect(errorMessages.length).toBe(0);
@@ -126,7 +128,7 @@ describe('EvaluationForm', () => {
     it('should accept PDF files', async () => {
       const wrapper = mount(EvaluationForm);
       const fileInput = wrapper.find('input[type="file"]');
-      
+
       const file = new File(['test content'], 'test.pdf', { type: 'application/pdf' });
       const fileList = {
         0: file,
@@ -136,14 +138,14 @@ describe('EvaluationForm', () => {
           yield file;
         },
       } as FileList;
-      
+
       Object.defineProperty(fileInput.element, 'files', {
         value: fileList,
         writable: false,
       });
-      
+
       await fileInput.trigger('change');
-      
+
       // File should be accepted without error
       const errorMessage = wrapper.text();
       expect(errorMessage.toLowerCase()).not.toContain('unsupported');
@@ -152,7 +154,7 @@ describe('EvaluationForm', () => {
     it('should show error for unsupported file types', async () => {
       const wrapper = mount(EvaluationForm);
       const fileInput = wrapper.find('input[type="file"]');
-      
+
       const file = new File(['test content'], 'test.txt', { type: 'text/plain' });
       const fileList = {
         0: file,
@@ -162,14 +164,14 @@ describe('EvaluationForm', () => {
           yield file;
         },
       } as FileList;
-      
+
       Object.defineProperty(fileInput.element, 'files', {
         value: fileList,
         writable: false,
       });
-      
+
       await fileInput.trigger('change');
-      
+
       const errorMessage = wrapper.text();
       expect(errorMessage.toLowerCase()).toMatch(/unsupported|format|pdf|pptx|docx/);
     });
@@ -189,13 +191,13 @@ describe('EvaluationForm', () => {
       const wrapper = mount(EvaluationForm);
       const emailInput = wrapper.find('input[type="email"]');
       const urlInput = wrapper.find('input[type="url"]');
-      
+
       await emailInput.setValue('user@example.com');
       await urlInput.setValue('https://example.com');
-      
+
       const form = wrapper.find('form');
       await form.trigger('submit');
-      
+
       expect(mockSubmitEvaluation).toHaveBeenCalledWith(
         expect.objectContaining({
           email: 'user@example.com',
@@ -217,15 +219,17 @@ describe('EvaluationForm', () => {
       const wrapper = mount(EvaluationForm);
       const emailInput = wrapper.find('input[type="email"]');
       const urlInput = wrapper.find('input[type="url"]');
-      const audienceInput = wrapper.find('input[placeholder*="audience" i], textarea[placeholder*="audience" i]');
-      
+      const audienceInput = wrapper.find(
+        'input[placeholder*="audience" i], textarea[placeholder*="audience" i]'
+      );
+
       await emailInput.setValue('user@example.com');
       await urlInput.setValue('https://example.com');
       await audienceInput.setValue('CFOs at Fortune 500 companies');
-      
+
       const form = wrapper.find('form');
       await form.trigger('submit');
-      
+
       expect(mockSubmitEvaluation).toHaveBeenCalledWith(
         expect.objectContaining({
           email: 'user@example.com',
@@ -242,15 +246,15 @@ describe('EvaluationForm', () => {
       const wrapper = mount(EvaluationForm);
       const emailInput = wrapper.find('input[type="email"]');
       const urlInput = wrapper.find('input[type="url"]');
-      
+
       await emailInput.setValue('user@example.com');
       await urlInput.setValue('https://example.com');
-      
+
       const form = wrapper.find('form');
       await form.trigger('submit');
-      
+
       await wrapper.vm.$nextTick();
-      
+
       const errorMessage = wrapper.text();
       expect(errorMessage.toLowerCase()).toMatch(/error|failed/);
     });
@@ -270,19 +274,17 @@ describe('EvaluationForm', () => {
       const wrapper = mount(EvaluationForm);
       const emailInput = wrapper.find('input[type="email"]');
       const urlInput = wrapper.find('input[type="url"]');
-      
+
       await emailInput.setValue('user@example.com');
       await urlInput.setValue('https://example.com');
-      
+
       const form = wrapper.find('form');
       await form.trigger('submit');
-      
+
       await wrapper.vm.$nextTick();
-      
+
       const confirmationMessage = wrapper.text();
       expect(confirmationMessage.toLowerCase()).toMatch(/success|received|confirmation/);
     });
   });
 });
-
-

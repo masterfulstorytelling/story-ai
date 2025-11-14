@@ -108,5 +108,3 @@ export async function getEvaluationStatus(id: string): Promise<EvaluationRespons
     throw error instanceof Error ? error : new Error('Unknown error occurred');
   }
 }
-
-

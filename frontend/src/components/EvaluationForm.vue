@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-6">
+  <form class="space-y-6" @submit.prevent="handleSubmit">
     <!-- Email Field (Required) -->
     <div>
       <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
@@ -21,9 +21,7 @@
 
     <!-- URL Field (Optional) -->
     <div>
-      <label for="url" class="block text-sm font-medium text-gray-700 mb-1">
-        Website URL
-      </label>
+      <label for="url" class="block text-sm font-medium text-gray-700 mb-1"> Website URL </label>
       <input
         id="url"
         v-model="formData.url"
@@ -47,9 +45,9 @@
         type="file"
         multiple
         accept=".pdf,.pptx,.docx,application/pdf,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        @change="handleFileChange"
         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         :class="{ 'border-red-500': errors.files }"
+        @change="handleFileChange"
       />
       <p v-if="errors.files" class="mt-1 text-sm text-red-600" role="alert">
         {{ errors.files }}
@@ -166,10 +164,7 @@ function handleFileChange(event: Event): void {
     }
 
     // Check file type
-    if (
-      !allowedTypes.includes(file.type) &&
-      !allowedExtensions.includes(fileExtension)
-    ) {
+    if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
       errors.files = `Unsupported file type. Allowed: PDF, PPTX, DOCX`;
       selectedFiles.value = [];
       return;
@@ -270,4 +265,3 @@ async function handleSubmit(): Promise<void> {
   }
 }
 </script>
-

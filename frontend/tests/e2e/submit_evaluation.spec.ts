@@ -25,7 +25,7 @@ describe('Submit Evaluation - E2E', () => {
   // 4. API client service (T049)
   // 5. SubmitEvaluation page (T050)
   // 6. Vue router setup (T051)
-  
+
   it('should be implemented after frontend components are built', () => {
     // Placeholder test - will be expanded once components exist
     expect(true).toBe(true);
@@ -40,4 +40,3 @@ describe('Submit Evaluation - E2E', () => {
   // 5. Show validation errors for invalid URL
   // 6. Show validation errors when neither URL nor file provided
 });
-
