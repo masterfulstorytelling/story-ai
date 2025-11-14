@@ -25,7 +25,7 @@ export async function deliverReport(
 ): Promise<void> {
   const { evaluationRequest, processingResult } = options;
   const { email } = evaluationRequest;
-  const { pdf_content, report } = processingResult;
+  const { pdf_content } = processingResult;
 
   logger.info('Delivering evaluation report', {
     submissionId: evaluationRequest.id,
