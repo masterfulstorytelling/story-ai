@@ -133,6 +133,14 @@ else
 fi
 
 echo "  - Tests..."
+# Set CI-like environment variables to catch environment-dependent test issues
+export ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-test-key}
+export LANGSMITH_API_KEY=${LANGSMITH_API_KEY:-}
+export LANGSMITH_PROJECT=${LANGSMITH_PROJECT:-story-eval-mvp-test}
+export FIRESTORE_PROJECT_ID=${FIRESTORE_PROJECT_ID:-test-project}
+export CLOUD_STORAGE_BUCKET=${CLOUD_STORAGE_BUCKET:-test-bucket}
+export GCP_PROJECT_ID=${GCP_PROJECT_ID:-test-project}
+
 if pytest tests/ -v --cov=src --cov-report=xml > /dev/null 2>&1; then
     echo -e "  ${GREEN}✓${NC} Tests passed"
 else
