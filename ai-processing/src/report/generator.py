@@ -113,7 +113,8 @@ def _render_template(template: str, data: Dict[str, Any]) -> str:
             '<div class="citation">\n            <strong>Quote:</strong> '
             '"{{ citation.quote }}"<br>\n            <strong>Source:</strong> '
             "{{ citation.source }}<br>\n            {% if citation.location %}\n            "
-            "<strong>Location:</strong> {{ citation.location }}\n            {% endif %}\n        </div>"
+            "<strong>Location:</strong> {{ citation.location }}\n            "
+            "{% endif %}\n        </div>"
         )
         html = html.replace(citation_template, citations_html)
     else:
