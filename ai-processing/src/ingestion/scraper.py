@@ -5,7 +5,7 @@ from typing import Optional
 from urllib.parse import urljoin, urlparse
 from urllib.robotparser import RobotFileParser
 
-from playwright.sync_api import sync_playwright, Page, TimeoutError as PlaywrightTimeoutError
+from playwright.sync_api import sync_playwright, Page, TimeoutError as PlaywrightTimeoutError, Error as PlaywrightError
 
 from src.models.scraped_content import ScrapedContent, PageContent
 from src.utils.logger import get_logger
@@ -132,7 +132,13 @@ def scrape_website(url: str, timeout: int = 30000, max_redirects: int = 5) -> Sc
             redirect_count = 0
             current_url = url
             while redirect_count < max_redirects:
-                response = page.goto(current_url, wait_until="networkidle", timeout=timeout)
+                try:
+                    response = page.goto(current_url, wait_until="networkidle", timeout=timeout)
+                except PlaywrightTimeoutError as e:
+                    raise ScrapingError(f"Timeout while accessing {current_url}: {str(e)}") from e
+                except PlaywrightError as e:
+                    raise ScrapingError(f"Error accessing {current_url}: {str(e)}") from e
+
                 if response and response.status >= 400:
                     raise ScrapingError(f"HTTP {response.status} error for {current_url}")
 
@@ -155,7 +161,12 @@ def scrape_website(url: str, timeout: int = 30000, max_redirects: int = 5) -> Sc
                 raise ScrapingError(f"Too many redirects (>{max_redirects}) for {url}")
 
             # Scrape homepage
-            homepage = scrape_page(page, current_url, timeout)
+            try:
+                homepage = scrape_page(page, current_url, timeout)
+            except PlaywrightTimeoutError as e:
+                raise ScrapingError(f"Timeout while scraping {current_url}: {str(e)}") from e
+            except PlaywrightError as e:
+                raise ScrapingError(f"Error scraping {current_url}: {str(e)}") from e
 
             # Find and scrape About page
             about_page = None
@@ -165,6 +176,12 @@ def scrape_website(url: str, timeout: int = 30000, max_redirects: int = 5) -> Sc
                     about_page = scrape_page(page, about_url, timeout)
                 except ScrapingError as e:
                     logger.warning(f"Could not scrape About page: {e}")
+                    # Continue without About page
+                except PlaywrightTimeoutError as e:
+                    logger.warning(f"Timeout scraping About page: {e}")
+                    # Continue without About page
+                except PlaywrightError as e:
+                    logger.warning(f"Error scraping About page: {e}")
                     # Continue without About page
 
             # Calculate total word count
@@ -184,6 +201,15 @@ def scrape_website(url: str, timeout: int = 30000, max_redirects: int = 5) -> Sc
                 total_word_count=total_words,
             )
 
+        except (ScrapingError, InsufficientContentError):
+            # Re-raise our custom errors
+            raise
+        except PlaywrightTimeoutError as e:
+            # Wrap Playwright timeout errors
+            raise ScrapingError(f"Timeout while scraping {url}: {str(e)}") from e
+        except PlaywrightError as e:
+            # Wrap other Playwright errors
+            raise ScrapingError(f"Error scraping {url}: {str(e)}") from e
         finally:
             context.close()
             browser.close()
