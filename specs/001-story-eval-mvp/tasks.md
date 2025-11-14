@@ -166,7 +166,7 @@
 
 #### Report Generation
 
-- [ ] T085 [US2] Implement PDF report generator in ai-processing/src/report/generator.py (WeasyPrint, 2-5 pages, all sections)
+- [X] T085 [US2] Implement PDF report generator in ai-processing/src/report/generator.py (WeasyPrint, 2-5 pages, all sections)
 - [ ] T086 [US2] Create report template in ai-processing/src/report/templates/report_template.html (executive summary, audience analysis, assessments, recommendations)
 
 #### Backend Integration

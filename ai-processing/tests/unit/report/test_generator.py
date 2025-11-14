@@ -9,8 +9,7 @@ import pytest
 
 class TestReportGenerator:
     """Test PDF report generation functionality."""
-    
-    @pytest.mark.skip(reason="T085: Report generator not yet implemented")
+
     def test_generates_pdf_report(self):
         """Test that report generator creates a PDF file."""
         from src.report.generator import generate_pdf_report
@@ -29,7 +28,6 @@ class TestReportGenerator:
         # Verify PDF signature
         assert pdf_content.startswith(b"%PDF")
 
-    @pytest.mark.skip(reason="T085: Report generator not yet implemented")
     def test_report_length_2_to_5_pages(self):
         """Test that generated report is 2-5 pages."""
         from src.report.generator import generate_pdf_report
@@ -47,7 +45,6 @@ class TestReportGenerator:
         page_count = pdf_content.count(b"/Type /Page")
         assert 2 <= page_count <= 5
 
-    @pytest.mark.skip(reason="T085: Report generator not yet implemented")
     def test_includes_all_required_sections(self):
         """Test that report includes all required sections."""
         from src.report.generator import generate_pdf_report
@@ -55,9 +52,9 @@ class TestReportGenerator:
         report_data = {
             "executive_summary": "Executive Summary",
             "audience_analysis": "Audience Analysis",
-            "clarity_assessment": "Clarity Assessment",
-            "technical_appropriateness": "Technical Appropriateness",
-            "importance_value": "Importance & Value",
+            "clarity_assessment": {"CFO": "Clarity Assessment for CFO"},
+            "technical_appropriateness": {"CFO": "Technical Appropriateness for CFO"},
+            "importance_value": {"CFO": "Importance & Value for CFO"},
             "voice_personality": "Voice & Personality",
             "storytelling_memorability": "Storytelling & Memorability",
             "recommendations": "Recommendations",
@@ -74,7 +71,6 @@ class TestReportGenerator:
         assert "Audience" in pdf_text or "audience" in pdf_text.lower()
         assert "Recommendations" in pdf_text or "recommendations" in pdf_text.lower()
 
-    @pytest.mark.skip(reason="T085: Report generator not yet implemented")
     def test_includes_citations(self):
         """Test that report includes citations."""
         from src.report.generator import generate_pdf_report
@@ -91,7 +87,6 @@ class TestReportGenerator:
         pdf_text = pdf_content.decode("utf-8", errors="ignore")
         assert "Test quote" in pdf_text or "citation" in pdf_text.lower()
 
-    @pytest.mark.skip(reason="T085: Report generator not yet implemented")
     def test_handles_empty_data(self):
         """Test handling of empty or minimal report data."""
         from src.report.generator import generate_pdf_report
@@ -106,4 +101,3 @@ class TestReportGenerator:
 
         assert isinstance(pdf_content, bytes)
         assert len(pdf_content) > 0
-
