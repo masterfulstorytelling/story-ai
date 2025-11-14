@@ -8,7 +8,11 @@ interface LogEntry {
 }
 
 class Logger {
-  private formatMessage(level: LogLevel, message: string, metadata?: Record<string, unknown>): string {
+  private formatMessage(
+    level: LogLevel,
+    message: string,
+    metadata?: Record<string, unknown>
+  ): string {
     const entry: LogEntry = {
       level,
       message,
@@ -48,4 +52,3 @@ class Logger {
 }
 
 export const logger = new Logger();
-

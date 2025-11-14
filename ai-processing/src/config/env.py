@@ -1,32 +1,42 @@
 """Environment configuration validation for AI processing layer."""
+
 import os
 from pathlib import Path
 from typing import Optional
-from dotenv import load_dotenv
 from pydantic import BaseModel, Field, field_validator
 
-# Load .env file from project root (ai-processing directory)
-env_path = Path(__file__).parent.parent.parent / '.env'
-load_dotenv(dotenv_path=env_path)
+# Load .env file from project root (ai-processing directory) if it exists
+# In CI/testing, environment variables are set directly, so .env file is optional
+try:
+    from dotenv import load_dotenv
+
+    env_path = Path(__file__).parent.parent.parent / ".env"
+    load_dotenv(dotenv_path=env_path, override=False)
+except ImportError:
+    # python-dotenv not installed - environment variables must be set directly
+    # This is fine for CI/testing where env vars are set via GitHub Actions
+    pass
 
 
 class EnvConfig(BaseModel):
     """Validated environment configuration."""
-    
+
     anthropic_api_key: str = Field(..., description="Anthropic API key for Claude")
-    langsmith_api_key: Optional[str] = Field(None, description="LangSmith API key for observability")
+    langsmith_api_key: Optional[str] = Field(
+        None, description="LangSmith API key for observability"
+    )
     langsmith_project: str = Field("story-eval-mvp", description="LangSmith project name")
     firestore_project_id: str = Field(..., description="GCP Firestore project ID")
     cloud_storage_bucket: str = Field(..., description="Cloud Storage bucket name")
     gcp_project_id: str = Field(..., description="GCP project ID")
-    
+
     @field_validator("anthropic_api_key")
     @classmethod
     def validate_anthropic_key(cls, v: str) -> str:
         if not v or v == "your-anthropic-api-key":
             raise ValueError("ANTHROPIC_API_KEY must be set to a valid API key")
         return v
-    
+
     @field_validator("firestore_project_id", "gcp_project_id")
     @classmethod
     def validate_project_id(cls, v: str) -> str:
@@ -49,4 +59,3 @@ def load_env_config() -> EnvConfig:
 
 # Global config instance
 env = load_env_config()
-

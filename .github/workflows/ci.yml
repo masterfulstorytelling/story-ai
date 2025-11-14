@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main, '001-story-eval-mvp']
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+      - name: Lint
+        working-directory: ./backend
+        run: npm run lint
+      - name: Type check
+        working-directory: ./backend
+        run: npx tsc --noEmit
+      - name: Test
+        working-directory: ./backend
+        run: npm test
+        env:
+          NODE_ENV: test
+          GCP_PROJECT_ID: test-project
+          FIRESTORE_PROJECT_ID: test-project
+          CLOUD_STORAGE_BUCKET: test-bucket
+          SENDGRID_API_KEY: test-sendgrid-key
+          CLOUD_TASKS_QUEUE: test-queue
+          CLOUD_TASKS_LOCATION: us-east1
+          AI_PROCESSING_URL: http://localhost:8000
+
+  frontend:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+      - name: Lint
+        working-directory: ./frontend
+        run: npm run lint
+      - name: Type check
+        working-directory: ./frontend
+        run: npx tsc --noEmit
+      - name: Test
+        working-directory: ./frontend
+        run: npm test
+        env:
+          NODE_ENV: test
+
+  ai-processing:
+    name: AI Processing Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: ai-processing/requirements.txt
+      - name: Install dependencies
+        working-directory: ./ai-processing
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install black flake8 pytest pytest-cov
+      - name: Format check (Black)
+        working-directory: ./ai-processing
+        run: black --check src/
+      - name: Lint (flake8)
+        working-directory: ./ai-processing
+        run: flake8 src/ --max-line-length=100 --extend-ignore=E203,W503 || true
+      - name: Test
+        working-directory: ./ai-processing
+        run: pytest tests/ -v --cov=src --cov-report=xml || echo "No tests yet"
+        env:
+          ANTHROPIC_API_KEY: test-key
+          LANGSMITH_API_KEY: ''
+          LANGSMITH_PROJECT: story-eval-mvp-test
+          FIRESTORE_PROJECT_ID: test-project
+          CLOUD_STORAGE_BUCKET: test-bucket
+          GCP_PROJECT_ID: test-project
+

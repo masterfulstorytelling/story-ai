@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import evaluationRoutes from './evaluationRoutes';
 
 const router = Router();
 
@@ -7,5 +8,7 @@ router.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-export default router;
+// Evaluation routes
+router.use(evaluationRoutes);
 
+export default router;

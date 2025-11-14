@@ -1,11 +1,10 @@
 """FastAPI application entry point for AI processing layer."""
+
 from datetime import datetime
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .config.env import env
 from .config.langsmith import configure_langsmith
-from .utils.logger import logger
 
 # Configure LangSmith
 configure_langsmith()
@@ -45,5 +44,5 @@ async def process_evaluation():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
 
+    uvicorn.run(app, host="0.0.0.0", port=8000)

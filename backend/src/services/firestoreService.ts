@@ -28,4 +28,3 @@ export const COLLECTIONS = {
   EVALUATIONS: 'evaluations',
   REPORTS: 'reports',
 } as const;
-

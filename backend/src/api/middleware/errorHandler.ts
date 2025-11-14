@@ -43,4 +43,3 @@ export function notFoundHandler(req: Request, res: Response): void {
     message: `Route ${req.method} ${req.path} not found`,
   });
 }
-

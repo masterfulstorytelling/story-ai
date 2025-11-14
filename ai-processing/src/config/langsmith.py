@@ -1,6 +1,6 @@
 """LangSmith configuration for observability."""
+
 import os
-from typing import Optional
 from .env import env
 
 
@@ -11,8 +11,9 @@ def configure_langsmith() -> None:
         os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
         os.environ["LANGCHAIN_API_KEY"] = env.langsmith_api_key
         os.environ["LANGCHAIN_PROJECT"] = env.langsmith_project
-        
+
         import logging
+
         logger = logging.getLogger(__name__)
         logger.info(
             "LangSmith configured",
@@ -20,10 +21,10 @@ def configure_langsmith() -> None:
         )
     else:
         import logging
+
         logger = logging.getLogger(__name__)
         logger.warning("LangSmith API key not provided - tracing disabled")
 
 
 # Auto-configure on import
 configure_langsmith()
-
