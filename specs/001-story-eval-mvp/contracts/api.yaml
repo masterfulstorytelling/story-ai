@@ -1,0 +1,179 @@
+openapi: 3.0.3
+info:
+  title: Corporate Storytelling Evaluation Tool API
+  version: 1.0.0
+  description: API for submitting content for evaluation and retrieving status
+
+servers:
+  - url: https://api.storyai.example.com/v1
+    description: Production server
+  - url: http://localhost:3000/v1
+    description: Local development server
+
+paths:
+  /evaluations:
+    post:
+      summary: Submit content for evaluation
+      description: Submit a website URL and/or files for storytelling evaluation
+      operationId: submitEvaluation
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: Website URL to evaluate
+                  example: https://example.com
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Uploaded files (PDF, PPTX, DOCX)
+                  maxItems: 10
+                user_provided_audience:
+                  type: string
+                  description: Optional target audience (e.g., "CFOs at Fortune 500 companies")
+                  example: CFOs at Fortune 500 companies
+                email:
+                  type: string
+                  format: email
+                  description: Email address for report delivery
+                  example: user@example.com
+      responses:
+        '201':
+          description: Evaluation request created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationResponse'
+        '400':
+          description: Invalid request (missing email, invalid URL, file too large, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: File too large (exceeds 50MB)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /evaluations/{id}:
+    get:
+      summary: Get evaluation status
+      description: Retrieve the status of an evaluation request
+      operationId: getEvaluationStatus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Evaluation request ID
+      responses:
+        '200':
+          description: Evaluation status retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationStatus'
+        '404':
+          description: Evaluation request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    EvaluationResponse:
+      type: object
+      required:
+        - id
+        - status
+        - submitted_at
+        - estimated_completion_time
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Evaluation request ID
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+          description: Current status of evaluation
+        submitted_at:
+          type: string
+          format: date-time
+          description: Submission timestamp
+        estimated_completion_time:
+          type: string
+          format: date-time
+          description: Estimated completion time (5-10 minutes from submission)
+        message:
+          type: string
+          description: Confirmation message
+          example: Your evaluation request has been received. You will receive a report via email within 10 minutes.
+
+    EvaluationStatus:
+      type: object
+      required:
+        - id
+        - status
+        - submitted_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+        submitted_at:
+          type: string
+          format: date-time
+        processing_started_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        error_message:
+          type: string
+          nullable: true
+          description: Error message if status is failed
+        report_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: Report ID if status is completed
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: VALIDATION_ERROR
+        message:
+          type: string
+          description: Human-readable error message
+          example: Email address is required
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+
