@@ -162,17 +162,17 @@
 
 - [X] T082 [US2] Create LangGraph state model in ai-processing/src/orchestration/state.py (content, audiences, agent outputs, citations)
 - [X] T083 [US2] Implement agent pipeline orchestration in ai-processing/src/orchestration/pipeline.py (LangGraph StateGraph, parallel execution)
-- [ ] T084 [US2] Create processing service in ai-processing/src/services/processing_service.py (orchestrates ingestion → agents → report)
+- [X] T084 [US2] Create processing service in ai-processing/src/services/processing_service.py (orchestrates ingestion → agents → report)
 
 #### Report Generation
 
-- [ ] T085 [US2] Implement PDF report generator in ai-processing/src/report/generator.py (WeasyPrint, 2-5 pages, all sections)
-- [ ] T086 [US2] Create report template in ai-processing/src/report/templates/report_template.html (executive summary, audience analysis, assessments, recommendations)
+- [X] T085 [US2] Implement PDF report generator in ai-processing/src/report/generator.py (WeasyPrint, 2-5 pages, all sections)
+- [X] T086 [US2] Create report template in ai-processing/src/report/templates/report_template.html (executive summary, audience analysis, assessments, recommendations)
 
 #### Backend Integration
 
-- [ ] T087 [US2] Create Cloud Tasks handler for processing in backend/src/api/handlers/processEvaluation.ts
-- [ ] T088 [US2] Implement AI processing API client in backend/src/services/aiProcessingService.ts (calls FastAPI service)
+- [X] T087 [US2] Create Cloud Tasks handler for processing in backend/src/api/handlers/processEvaluation.ts
+- [X] T088 [US2] Implement AI processing API client in backend/src/services/aiProcessingService.ts (calls FastAPI service)
 - [ ] T089 [US2] Implement report delivery service in backend/src/services/reportDeliveryService.ts (email with PDF attachment)
 - [ ] T090 [US2] Create GET /evaluations/:id endpoint in backend/src/api/routes/evaluationRoutes.ts (status check)
 - [ ] T091 [US2] Integrate processing pipeline in backend/src/services/submissionService.ts (queue Cloud Task after submission)
