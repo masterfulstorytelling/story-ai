@@ -36,4 +36,15 @@ export function loadEnvConfig(): EnvConfig {
   };
 }
 
-export const env = loadEnvConfig();
+// Lazy initialization: only load config when accessed, not at module load time
+// This allows tests to set environment variables before accessing env
+let _env: EnvConfig | null = null;
+
+export const env: EnvConfig = new Proxy({} as EnvConfig, {
+  get(_target, prop: keyof EnvConfig) {
+    if (!_env) {
+      _env = loadEnvConfig();
+    }
+    return _env[prop];
+  },
+});
