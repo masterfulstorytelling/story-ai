@@ -14,6 +14,7 @@ import { getFirestore, COLLECTIONS } from '../../services/firestoreService';
 import { EvaluationRequest } from '../../models/EvaluationRequest';
 import { logger } from '../../utils/logger';
 import { TaskPayload } from '../../services/taskService';
+import { processEvaluation as processWithAI } from '../../services/aiProcessingService';
 
 /**
  * Process evaluation request handler
@@ -66,11 +67,35 @@ export async function processEvaluationHandler(
       submissionId,
     });
 
-    // TODO (T088): Call AI processing service
-    // const processingResult = await processWithAI(evaluationRequest);
+    // Call AI processing service (T088)
+    const processingResult = await processWithAI(evaluationRequest);
+
+    if (processingResult.status === 'failed') {
+      throw new Error(
+        processingResult.error || 'AI processing service returned failed status'
+      );
+    }
+
+    logger.info('AI processing completed', {
+      submissionId,
+      audienceCount: processingResult.audiences?.length || 0,
+      hasReport: !!processingResult.report,
+    });
 
     // TODO (T089): Generate and deliver report
     // await deliverReport(evaluationRequest, processingResult);
+
+    // Store processing result in Firestore (for T090 status endpoint)
+    const evaluationsRef = firestore.collection(COLLECTIONS.EVALUATIONS);
+    await evaluationsRef.doc(submissionId).set({
+      submission_id: submissionId,
+      audiences: processingResult.audiences,
+      assessments: processingResult.assessments,
+      report: processingResult.report,
+      validated_citations: processingResult.validated_citations,
+      status: processingResult.status,
+      created_at: new Date().toISOString(),
+    });
 
     // Update status to completed
     evaluationRequest.status = 'completed';
