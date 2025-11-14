@@ -162,7 +162,7 @@
 
 - [X] T082 [US2] Create LangGraph state model in ai-processing/src/orchestration/state.py (content, audiences, agent outputs, citations)
 - [X] T083 [US2] Implement agent pipeline orchestration in ai-processing/src/orchestration/pipeline.py (LangGraph StateGraph, parallel execution)
-- [ ] T084 [US2] Create processing service in ai-processing/src/services/processing_service.py (orchestrates ingestion → agents → report)
+- [X] T084 [US2] Create processing service in ai-processing/src/services/processing_service.py (orchestrates ingestion → agents → report)
 
 #### Report Generation
 
