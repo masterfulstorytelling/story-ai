@@ -116,7 +116,7 @@ specificity_score, source, rationale, citations (array with quote and source).
                         for c in aud_data.get("citations", [])
                     ]
                     if aud_data.get("citations")
-                    else None
+                    else []
                 ),
             )
             audiences.append(audience)
