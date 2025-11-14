@@ -175,7 +175,7 @@
 - [X] T088 [US2] Implement AI processing API client in backend/src/services/aiProcessingService.ts (calls FastAPI service)
 - [X] T089 [US2] Implement report delivery service in backend/src/services/reportDeliveryService.ts (email with PDF attachment)
 - [X] T090 [US2] Create GET /evaluations/:id endpoint in backend/src/api/routes/evaluationRoutes.ts (status check)
-- [ ] T091 [US2] Integrate processing pipeline in backend/src/services/submissionService.ts (queue Cloud Task after submission)
+- [X] T091 [US2] Integrate processing pipeline in backend/src/services/submissionService.ts (queue Cloud Task after submission)
 
 #### Error Handling
 

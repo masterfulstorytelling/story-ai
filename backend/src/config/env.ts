@@ -12,6 +12,7 @@ interface EnvConfig {
   cloudTasksQueue: string;
   cloudTasksLocation: string;
   aiProcessingUrl: string;
+  backendUrl: string;
 }
 
 function getEnvVar(key: string, defaultValue?: string): string {
@@ -33,6 +34,7 @@ export function loadEnvConfig(): EnvConfig {
     cloudTasksQueue: getEnvVar('CLOUD_TASKS_QUEUE'),
     cloudTasksLocation: getEnvVar('CLOUD_TASKS_LOCATION'),
     aiProcessingUrl: getEnvVar('AI_PROCESSING_URL', 'http://localhost:8000'),
+    backendUrl: getEnvVar('BACKEND_URL', 'http://localhost:3000'),
   };
 }
 

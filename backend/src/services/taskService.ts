@@ -33,10 +33,12 @@ export async function createTask(payload: TaskPayload): Promise<string> {
   const location = env.cloudTasksLocation;
   const parent = client.queuePath(project, location, queue);
 
+  // Cloud Task should call the backend handler, which then orchestrates
+  // the full processing pipeline (AI processing + report delivery)
   const task = {
     httpRequest: {
       httpMethod: 'POST' as const,
-      url: `${env.aiProcessingUrl}/process`,
+      url: `${env.backendUrl}/v1/tasks/process`,
       headers: {
         'Content-Type': 'application/json',
       },
