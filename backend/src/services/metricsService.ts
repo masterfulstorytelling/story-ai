@@ -102,9 +102,7 @@ export class MetricsService {
 
     // Filter metrics within time window
     const recentProcessingTimes = timeWindowMs
-      ? this.processingTimes.filter(
-          (m) => m.timestamp.getTime() >= windowStart
-        )
+      ? this.processingTimes.filter((m) => m.timestamp.getTime() >= windowStart)
       : this.processingTimes;
 
     const recentSubmissions = timeWindowMs
@@ -113,18 +111,14 @@ export class MetricsService {
 
     // Calculate submission statistics
     const totalSubmissions = recentSubmissions.length;
-    const successfulSubmissions = recentSubmissions.filter((m) => m.success)
-      .length;
+    const successfulSubmissions = recentSubmissions.filter((m) => m.success).length;
     const failedSubmissions = recentSubmissions.filter((m) => !m.success).length;
-    const successRate =
-      totalSubmissions > 0 ? successfulSubmissions / totalSubmissions : 0;
+    const successRate = totalSubmissions > 0 ? successfulSubmissions / totalSubmissions : 0;
 
     // Calculate processing time statistics
     const durations = recentProcessingTimes.map((m) => m.durationMs);
     const averageProcessingTimeMs =
-      durations.length > 0
-        ? durations.reduce((sum, d) => sum + d, 0) / durations.length
-        : 0;
+      durations.length > 0 ? durations.reduce((sum, d) => sum + d, 0) / durations.length : 0;
 
     const sortedDurations = [...durations].sort((a, b) => a - b);
     const medianProcessingTimeMs =
@@ -136,10 +130,8 @@ export class MetricsService {
           : sortedDurations[Math.floor(sortedDurations.length / 2)]
         : 0;
 
-    const minProcessingTimeMs =
-      durations.length > 0 ? Math.min(...durations) : 0;
-    const maxProcessingTimeMs =
-      durations.length > 0 ? Math.max(...durations) : 0;
+    const minProcessingTimeMs = durations.length > 0 ? Math.min(...durations) : 0;
+    const maxProcessingTimeMs = durations.length > 0 ? Math.max(...durations) : 0;
 
     return {
       processingTimes: recentProcessingTimes,
@@ -176,4 +168,3 @@ export class MetricsService {
 }
 
 export const metricsService = new MetricsService();
-
