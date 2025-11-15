@@ -9,6 +9,7 @@ interface EnvConfig {
   firestoreProjectId: string;
   cloudStorageBucket: string;
   sendgridApiKey: string;
+  sendgridFromEmail?: string;
   cloudTasksQueue: string;
   cloudTasksLocation: string;
   aiProcessingUrl: string;
@@ -17,10 +18,14 @@ interface EnvConfig {
 
 function getEnvVar(key: string, defaultValue?: string): string {
   const value = process.env[key];
-  if (!value && !defaultValue) {
+  if (!value && defaultValue === undefined) {
     throw new Error(`Missing required environment variable: ${key}`);
   }
-  return value || defaultValue!;
+  return value || defaultValue || '';
+}
+
+function getOptionalEnvVar(key: string): string | undefined {
+  return process.env[key];
 }
 
 export function loadEnvConfig(): EnvConfig {
@@ -31,6 +36,7 @@ export function loadEnvConfig(): EnvConfig {
     firestoreProjectId: getEnvVar('FIRESTORE_PROJECT_ID'),
     cloudStorageBucket: getEnvVar('CLOUD_STORAGE_BUCKET'),
     sendgridApiKey: getEnvVar('SENDGRID_API_KEY'),
+    sendgridFromEmail: getOptionalEnvVar('SENDGRID_FROM_EMAIL'),
     cloudTasksQueue: getEnvVar('CLOUD_TASKS_QUEUE'),
     cloudTasksLocation: getEnvVar('CLOUD_TASKS_LOCATION'),
     aiProcessingUrl: getEnvVar('AI_PROCESSING_URL', 'http://localhost:8000'),

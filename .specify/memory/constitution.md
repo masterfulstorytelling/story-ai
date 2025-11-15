@@ -1,8 +1,8 @@
 <!--
 Sync Impact Report:
-Version: 1.1.0 (added modular architecture and TDD principles)
+Version: 1.1.1 (strengthened TDD enforcement and Active Plan Protocol)
 Ratification Date: 2025-11-13
-Last Amended: 2025-11-13
+Last Amended: 2025-01-XX (TDD enforcement fixes)
 
 Principles Added (v1.0.0):
 - I. Single-Purpose Agents
@@ -71,7 +71,19 @@ Each new feature specification tool MUST be easily separable from others. Featur
 
 ### VII. Test-Driven Development (NON-NEGOTIABLE)
 
-A comprehensive test suite MUST be called upon at natural checkpoints and between phases. Tests MUST be written before implementation (red-green-refactor cycle). Test coverage MUST include unit tests, integration tests, and contract tests for agent interfaces. All tests MUST pass before proceeding to the next phase or checkpoint.
+**MANDATORY REQUIREMENTS**:
+- A comprehensive test suite MUST be called upon at natural checkpoints and between phases
+- Tests MUST be written before implementation (red-green-refactor cycle)
+- Test coverage MUST include unit tests, integration tests, and contract tests for agent interfaces
+- **All tests MUST pass before proceeding to the next phase or checkpoint**
+- **NEVER ask "should we proceed to the next phase?" without first running and verifying all tests pass**
+- **NEVER skip testing between phases - this is a hard requirement, not optional**
+
+**Enforcement**:
+- When completing a phase, you MUST run all relevant tests and report results
+- If tests fail, you MUST fix them before asking to proceed
+- If no tests exist, you MUST write them before asking to proceed
+- The question "Ready to proceed to next phase?" is ONLY valid after confirming "All tests passing"
 
 **Rationale**: TDD ensures code quality, prevents regressions, documents expected behavior, and provides confidence for rapid iteration. For a system requiring executive-level credibility, comprehensive testing is non-negotiable. Natural checkpoints (between phases, before deployments, after major changes) ensure continuous validation.
 
@@ -96,12 +108,22 @@ This project follows the Specify framework (integrated Design Thinking + Jobs-to
 
 1. Read active-plan.md BEFORE making changes
 2. Complete sub-steps IN ORDER, one at a time
-3. After completing each sub-step, ASK: "Sub-step [X] complete. Ready to proceed to sub-step [Y]?"
-4. WAIT for explicit user confirmation
-5. Update active-plan.md to mark current complete, next as current
-6. Then proceed
+3. **TDD CHECKPOINT**: After completing each sub-step that involves implementation:
+   - If the sub-step completed a phase or major feature, you MUST run all relevant tests
+   - Verify 100% test pass rate before asking to proceed
+   - Report test results: "Sub-step [X] complete. All tests passing (X/Y passed). Ready to proceed to sub-step [Y]?"
+4. **If tests fail**: DO NOT ask to proceed. Fix failing tests first, then report: "Sub-step [X] complete. Fixed [N] failing tests. All tests passing. Ready to proceed to sub-step [Y]?"
+5. **If no tests exist for this sub-step**: DO NOT ask to proceed. State: "Sub-step [X] complete. However, no tests were run. Per Constitution Principle VII (TDD NON-NEGOTIABLE), tests MUST be written and passing before proceeding. Should I write tests for this sub-step first?"
+6. WAIT for explicit user confirmation
+7. Update active-plan.md to mark current complete, next as current
+8. Then proceed
 
-**Do NOT**: Skip ahead without approval, combine multiple sub-steps, or proceed without explicit confirmation.
+**Do NOT**: 
+- Skip ahead without approval
+- Combine multiple sub-steps
+- Proceed without explicit confirmation
+- **Ask to proceed without running tests** (this violates Constitution Principle VII)
+- **Skip testing between phases** (this violates Constitution Principle VII)
 
 ### Content Generation Protocol
 
@@ -143,4 +165,4 @@ This constitution supersedes all other development practices and guidelines. Ame
 
 All PRs, reviews, and implementation work MUST verify compliance with constitution principles. Complexity must be justified against these principles. Use `CLAUDE.md` for runtime development guidance and project-specific context.
 
-**Version**: 1.1.0 | **Ratified**: 2025-11-13 | **Last Amended**: 2025-11-13
+**Version**: 1.1.1 | **Ratified**: 2025-11-13 | **Last Amended**: 2025-01-XX (TDD enforcement fixes)

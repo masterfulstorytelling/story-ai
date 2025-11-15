@@ -35,7 +35,7 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
 
   try {
     await sgMail.send({
-      from: 'noreply@feedforward.ai', // TODO: Update with your verified sender
+      from: env.sendgridFromEmail || 'noreply@feedforward.ai',
       to: options.to,
       subject: options.subject,
       text: options.text,

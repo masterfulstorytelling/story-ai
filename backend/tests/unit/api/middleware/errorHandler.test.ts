@@ -44,7 +44,7 @@ describe('Error Handler Middleware', () => {
       expect(statusMock).toHaveBeenCalledWith(404);
       expect(jsonMock).toHaveBeenCalledWith({
         error: 'NOT_FOUND',
-        message: 'Not found',
+        message: 'The requested resource was not found.',
       });
       expect(logger.error).toHaveBeenCalled();
     });
@@ -57,7 +57,7 @@ describe('Error Handler Middleware', () => {
       expect(statusMock).toHaveBeenCalledWith(500);
       expect(jsonMock).toHaveBeenCalledWith({
         error: 'INTERNAL_ERROR',
-        message: 'Internal error',
+        message: 'An internal error occurred. Our team has been notified and will investigate.',
       });
     });
 
