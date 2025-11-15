@@ -23,5 +23,5 @@ def test_process_endpoint_placeholder():
 
     assert response.status_code == 200
     data = response.json()
-    assert data["message"] == "Processing endpoint - to be implemented"
+    assert data["message"] == "Processing endpoint is implemented in the evaluation pipeline"
 
