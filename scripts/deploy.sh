@@ -118,8 +118,8 @@ if [ "$SERVICE" == "backend" ] || [ "$SERVICE" == "all" ]; then
         "8080" \
         "--allow-unauthenticated \
         --service-account=storyai-backend@${PROJECT_ID}.iam.gserviceaccount.com \
-        --set-env-vars=PORT=8080,NODE_ENV=production,AI_PROCESSING_URL=https://${SERVICE_PREFIX}-processing-${PROJECT_ID}.run.app \
-        --set-secrets=GCP_PROJECT_ID=storyai-secrets:gcp-project-id,FIRESTORE_PROJECT_ID=storyai-secrets:firestore-project-id,CLOUD_STORAGE_BUCKET=storyai-secrets:cloud-storage-bucket,SENDGRID_API_KEY=storyai-secrets:sendgrid-api-key,SENDGRID_FROM_EMAIL=storyai-secrets:sendgrid-from-email,CLOUD_TASKS_QUEUE=storyai-secrets:cloud-tasks-queue,CLOUD_TASKS_LOCATION=storyai-secrets:cloud-tasks-location"
+        --set-env-vars=NODE_ENV=production,AI_PROCESSING_URL=https://${SERVICE_PREFIX}-processing-${PROJECT_ID}.run.app \
+        --set-secrets=GCP_PROJECT_ID=gcp-project-id:latest,FIRESTORE_PROJECT_ID=firestore-project-id:latest,CLOUD_STORAGE_BUCKET=cloud-storage-bucket:latest,SENDGRID_API_KEY=sendgrid-api-key:latest,SENDGRID_FROM_EMAIL=sendgrid-from-email:latest,CLOUD_TASKS_QUEUE=cloud-tasks-queue:latest,CLOUD_TASKS_LOCATION=cloud-tasks-location:latest"
 fi
 
 # Deploy Frontend
@@ -135,7 +135,7 @@ if [ "$SERVICE" == "frontend" ] || [ "$SERVICE" == "all" ]; then
         "60" \
         "8080" \
         "--allow-unauthenticated \
-        --set-env-vars=PORT=8080,VITE_API_URL=https://${SERVICE_PREFIX}-backend-${PROJECT_ID}.run.app"
+        --set-env-vars=VITE_API_URL=https://${SERVICE_PREFIX}-backend-${PROJECT_ID}.run.app"
 fi
 
 # Deploy AI Processing
@@ -152,8 +152,8 @@ if [ "$SERVICE" == "ai-processing" ] || [ "$SERVICE" == "all" ]; then
         "8000" \
         "--no-allow-unauthenticated \
         --service-account=storyai-processing@${PROJECT_ID}.iam.gserviceaccount.com \
-        --set-env-vars=PORT=8000,PYTHONUNBUFFERED=1,CORS_ALLOWED_ORIGINS=https://${SERVICE_PREFIX}-backend-${PROJECT_ID}.run.app \
-        --set-secrets=GCP_PROJECT_ID=storyai-secrets:gcp-project-id,ANTHROPIC_API_KEY=storyai-secrets:anthropic-api-key,LANGSMITH_API_KEY=storyai-secrets:langsmith-api-key,LANGSMITH_PROJECT=storyai-secrets:langsmith-project"
+        --set-env-vars=PYTHONUNBUFFERED=1,CORS_ALLOWED_ORIGINS=https://${SERVICE_PREFIX}-backend-${PROJECT_ID}.run.app \
+        --set-secrets=GCP_PROJECT_ID=gcp-project-id:latest,FIRESTORE_PROJECT_ID=firestore-project-id:latest,CLOUD_STORAGE_BUCKET=cloud-storage-bucket:latest,ANTHROPIC_API_KEY=anthropic-api-key:latest,LANGSMITH_API_KEY=langsmith-api-key:latest,LANGSMITH_PROJECT=langsmith-project:latest"
 fi
 
 echo -e "${GREEN}✓ All deployments completed successfully!${NC}"
