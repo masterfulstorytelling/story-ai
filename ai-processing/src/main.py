@@ -21,9 +21,7 @@ app = FastAPI(
 env_config = load_env_config()
 # Restrict CORS origins in production
 allowed_origins = (
-    env_config.cors_allowed_origins.split(",")
-    if env_config.cors_allowed_origins
-    else ["*"]
+    env_config.cors_allowed_origins.split(",") if env_config.cors_allowed_origins else ["*"]
 )
 
 app.add_middleware(
