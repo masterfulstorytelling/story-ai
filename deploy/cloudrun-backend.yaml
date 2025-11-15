@@ -1,0 +1,90 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: storyai-backend
+  annotations:
+    run.googleapis.com/ingress: all
+    run.googleapis.com/execution-environment: gen2
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "20"
+        run.googleapis.com/cpu-throttling: "true"
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      serviceAccountName: storyai-backend@PROJECT_ID.iam.gserviceaccount.com
+      containers:
+      - image: gcr.io/PROJECT_ID/storyai-backend:latest
+        ports:
+        - name: http1
+          containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
+        - name: NODE_ENV
+          value: "production"
+        - name: GCP_PROJECT_ID
+          valueFrom:
+            secretKeyRef:
+              name: storyai-secrets
+              key: gcp-project-id
+        - name: FIRESTORE_PROJECT_ID
+          valueFrom:
+            secretKeyRef:
+              name: storyai-secrets
+              key: firestore-project-id
+        - name: CLOUD_STORAGE_BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: storyai-secrets
+              key: cloud-storage-bucket
+        - name: SENDGRID_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: storyai-secrets
+              key: sendgrid-api-key
+        - name: SENDGRID_FROM_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: storyai-secrets
+              key: sendgrid-from-email
+        - name: CLOUD_TASKS_QUEUE
+          valueFrom:
+            secretKeyRef:
+              name: storyai-secrets
+              key: cloud-tasks-queue
+        - name: CLOUD_TASKS_LOCATION
+          valueFrom:
+            secretKeyRef:
+              name: storyai-secrets
+              key: cloud-tasks-location
+        - name: AI_PROCESSING_URL
+          value: "https://storyai-processing-PROJECT_ID.run.app"
+        resources:
+          limits:
+            cpu: "1"
+            memory: 512Mi
+          requests:
+            cpu: "1"
+            memory: 512Mi
+        startupProbe:
+          httpGet:
+            path: /v1/health
+            port: 8080
+          initialDelaySeconds: 0
+          timeoutSeconds: 1
+          periodSeconds: 3
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /v1/health
+            port: 8080
+          initialDelaySeconds: 0
+          timeoutSeconds: 1
+          periodSeconds: 10
+          failureThreshold: 3
+
