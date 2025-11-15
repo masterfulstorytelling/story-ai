@@ -2,8 +2,9 @@ import { Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import evaluationRoutes from './evaluationRoutes';
 import metricsRoutes from './metricsRoutes';
+import dataDeletionRoutes from './dataDeletion';
 import { processEvaluationHandler } from '../handlers/processEvaluation';
-import { generateOpenAPISpec } from './openapi';
+import { generateOpenAPISpec } from '../openapi';
 
 const router = Router();
 
@@ -31,5 +32,8 @@ router.use(evaluationRoutes);
 
 // Metrics routes
 router.use('/v1', metricsRoutes);
+
+// GDPR data deletion routes
+router.use('/v1', dataDeletionRoutes);
 
 export default router;
