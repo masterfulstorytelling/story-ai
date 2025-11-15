@@ -111,4 +111,3 @@ describe('Health Check Endpoint', () => {
     });
   });
 });
-

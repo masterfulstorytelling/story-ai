@@ -19,7 +19,7 @@ const router = Router();
 /**
  * POST /data-deletion
  * Delete all user data for a given email address (GDPR compliance)
- * 
+ *
  * Note: Mounted at /v1 in index.ts, so full path is /v1/data-deletion
  */
 router.post('/data-deletion', async (req: Request, res: Response) => {
@@ -185,4 +185,3 @@ router.post('/data-deletion', async (req: Request, res: Response) => {
 });
 
 export default router;
-

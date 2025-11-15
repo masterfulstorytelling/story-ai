@@ -10,6 +10,7 @@
  * T099: Add data retention job (delete old files per data-model.md retention policy)
  */
 
+import { DocumentReference } from '@google-cloud/firestore';
 import { getFirestore, COLLECTIONS } from './firestoreService';
 import { getBucket, BUCKETS } from './storageService';
 import { logger } from '../utils/logger';
@@ -58,7 +59,7 @@ export class DataRetentionService {
         try {
           const [metadata] = await file.getMetadata();
           const timeCreatedStr = metadata.timeCreated;
-          
+
           if (!timeCreatedStr) {
             logger.warn('File missing timeCreated metadata', { fileName: file.name });
             continue;
@@ -291,7 +292,7 @@ export class DataRetentionService {
    * Delete an evaluation request and all its subcollections
    */
   private async deleteEvaluationRequestWithSubcollections(
-    docRef: FirebaseFirestore.DocumentReference,
+    docRef: DocumentReference
   ): Promise<void> {
     // Delete subcollections: audiences, evaluations, reports, parsed_content, scraped_content
     const subcollections = [
@@ -357,4 +358,3 @@ export class DataRetentionService {
 }
 
 export const dataRetentionService = new DataRetentionService();
-

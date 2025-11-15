@@ -13,7 +13,7 @@ const router = Router();
 // Health check endpoint
 router.get('/health', async (req, res) => {
   const checkDependencies = req.query.check === 'dependencies';
-  
+
   if (!checkDependencies) {
     // Basic health check - just verify service is running
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
@@ -21,11 +21,19 @@ router.get('/health', async (req, res) => {
   }
 
   // Comprehensive health check - verify all dependencies
-  const healthStatus: any = {
+  interface HealthStatus {
+    status: 'ok' | 'unhealthy';
+    timestamp: string;
+    service: string;
+    dependencies: Record<string, string>;
+    error?: string;
+  }
+
+  const healthStatus: HealthStatus = {
     status: 'ok',
     timestamp: new Date().toISOString(),
     service: 'backend',
-    dependencies: {} as Record<string, string>,
+    dependencies: {},
   };
 
   try {
@@ -35,7 +43,7 @@ router.get('/health', async (req, res) => {
       const testQuery = firestore.collection('evaluation_requests').limit(1);
       await testQuery.get();
       healthStatus.dependencies.firestore = 'healthy';
-    } catch (error) {
+    } catch {
       healthStatus.dependencies.firestore = 'unavailable';
       healthStatus.status = 'unhealthy';
     }
@@ -45,11 +53,11 @@ router.get('/health', async (req, res) => {
       const bucket = getBucket();
       await bucket.exists();
       healthStatus.dependencies.cloudStorage = 'healthy';
-    } catch (error) {
+    } catch {
       healthStatus.dependencies.cloudStorage = 'unavailable';
       healthStatus.status = 'unhealthy';
     }
-  } catch (error) {
+  } catch {
     healthStatus.status = 'unhealthy';
     healthStatus.error = 'Health check failed';
   }

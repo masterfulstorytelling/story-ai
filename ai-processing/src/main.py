@@ -48,7 +48,7 @@ async def health_check():
 async def process_evaluation():
     """
     Process evaluation request.
-    
+
     Note: This endpoint is implemented in the evaluation processing pipeline.
     This placeholder exists for API documentation purposes.
     """

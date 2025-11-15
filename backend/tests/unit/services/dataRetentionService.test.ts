@@ -18,8 +18,13 @@ import { getBucket } from '../../../src/services/storageService';
 
 describe('DataRetentionService', () => {
   let dataRetentionService: DataRetentionService;
-  let mockFirestore: any;
-  let mockStorageBucket: any;
+  let mockFirestore: {
+    collection: jest.Mock;
+  };
+  let mockStorageBucket: {
+    file: jest.Mock;
+    getFiles: jest.Mock;
+  };
 
   beforeEach(() => {
     // Setup mocks
@@ -79,7 +84,7 @@ describe('DataRetentionService', () => {
         ref: { delete: jest.fn().mockResolvedValue(undefined) },
       };
 
-      const mockQuery: any = {
+      const mockQuery = {
         where: jest.fn().mockReturnThis(),
         get: jest.fn().mockResolvedValue({
           docs: [oldDoc], // Query filters by date, so only old docs are returned
@@ -112,7 +117,7 @@ describe('DataRetentionService', () => {
         },
       };
 
-      const mockQuery: any = {
+      const mockQuery = {
         where: jest.fn().mockReturnThis(),
         get: jest.fn().mockResolvedValue({
           docs: [oldEvalDoc], // Query filters by date, so only old docs are returned
@@ -146,4 +151,3 @@ describe('DataRetentionService', () => {
     });
   });
 });
-
