@@ -12,7 +12,6 @@
  * TDD: This test is written FIRST and should FAIL until implementation is complete.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import EvaluationForm from '../../../src/components/EvaluationForm.vue';
