@@ -36,12 +36,15 @@ describe('CloudLoggingService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    cloudLoggingService = new CloudLoggingService('test-project');
+    // Enable Cloud Logging in tests since we're mocking it
+    cloudLoggingService = new CloudLoggingService('test-project', true);
   });
 
   describe('Initialization', () => {
-    it('should initialize with project ID', () => {
+    it('should initialize with project ID', async () => {
       expect(cloudLoggingService).toBeDefined();
+      // Trigger initialization by calling a method
+      await cloudLoggingService.info('test');
       expect(Logging).toHaveBeenCalledWith({ projectId: 'test-project' });
     });
   });

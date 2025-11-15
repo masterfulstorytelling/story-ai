@@ -24,25 +24,40 @@ export class CloudLoggingService {
   private logging: Logging | null = null;
   private log: ReturnType<Logging['log']> | null = null;
   private projectId: string;
+  private disabled: boolean = false;
 
-  constructor(projectId?: string) {
+  constructor(projectId?: string, enableInTests: boolean = false) {
     // Lazy evaluation to avoid accessing env at module load time
     try {
       this.projectId = projectId || env.gcpProjectId;
     } catch {
-      // If env is not available (e.g., in tests), use a default
+      // If env is not available (e.g., in tests), disable Cloud Logging
       this.projectId = projectId || 'test-project';
+      if (!enableInTests) {
+        this.disabled = true;
+      }
+    }
+
+    // Disable Cloud Logging in test environments or CI unless explicitly enabled
+    // This prevents authentication errors when credentials are not available
+    if (!enableInTests && (process.env.NODE_ENV === 'test' || process.env.CI || process.env.JEST_WORKER_ID)) {
+      this.disabled = true;
     }
   }
 
   private getLog(): ReturnType<Logging['log']> | null {
+    if (this.disabled) {
+      return null;
+    }
+
     if (!this.log) {
       try {
         this.logging = new Logging({ projectId: this.projectId });
         this.log = this.logging.log('story-eval-mvp');
       } catch (err) {
         // Fail silently if Cloud Logging cannot be initialized
-        console.error('Failed to initialize Cloud Logging:', err);
+        // Disable Cloud Logging to prevent further attempts
+        this.disabled = true;
         return null;
       }
     }
@@ -55,6 +70,10 @@ export class CloudLoggingService {
     metadata?: LogMetadata,
     error?: ErrorDetails
   ): Promise<void> {
+    if (this.disabled) {
+      return; // Cloud Logging disabled
+    }
+
     const log = this.getLog();
     if (!log) {
       return; // Cloud Logging not available
@@ -82,8 +101,12 @@ export class CloudLoggingService {
       await log.write(entry);
     } catch (err) {
       // Fail silently to avoid breaking application if logging fails
-      // Log to console as fallback
-      console.error('Failed to write to Cloud Logging:', err);
+      // Disable Cloud Logging to prevent further attempts
+      this.disabled = true;
+      // Only log to console in development, not in tests
+      if (process.env.NODE_ENV !== 'test') {
+        console.error('Failed to write to Cloud Logging:', err);
+      }
     }
   }
 
@@ -117,5 +140,7 @@ export class CloudLoggingService {
   }
 }
 
+// Export singleton instance - initialization is lazy
+// Disabled in test/CI environments to prevent authentication errors
 export const cloudLoggingService = new CloudLoggingService();
 
