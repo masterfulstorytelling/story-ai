@@ -151,4 +151,3 @@ export class AlertingService {
 export const createAlertingService = (config: AlertingConfig): AlertingService => {
   return new AlertingService(config);
 };
-

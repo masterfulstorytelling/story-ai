@@ -49,9 +49,7 @@ export class ErrorTrackingService {
     const windowStart = now - this.windowMs;
 
     // Filter errors within the time window
-    const recentErrors = this.errors.filter(
-      (e) => e.timestamp.getTime() >= windowStart
-    );
+    const recentErrors = this.errors.filter((e) => e.timestamp.getTime() >= windowStart);
 
     // Count by type
     const byType: Record<string, number> = {};
@@ -78,4 +76,3 @@ export class ErrorTrackingService {
 }
 
 export const errorTrackingService = new ErrorTrackingService();
-

@@ -83,9 +83,7 @@ describe('CloudLoggingService', () => {
       mockWrite.mockRejectedValueOnce(new Error('Logging failed'));
 
       // Should not throw
-      await expect(
-        cloudLoggingService.info('Test', {})
-      ).resolves.not.toThrow();
+      await expect(cloudLoggingService.info('Test', {})).resolves.not.toThrow();
     });
   });
 });

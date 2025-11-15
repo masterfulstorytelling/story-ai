@@ -40,7 +40,10 @@ export class CloudLoggingService {
 
     // Disable Cloud Logging in test environments or CI unless explicitly enabled
     // This prevents authentication errors when credentials are not available
-    if (!enableInTests && (process.env.NODE_ENV === 'test' || process.env.CI || process.env.JEST_WORKER_ID)) {
+    if (
+      !enableInTests &&
+      (process.env.NODE_ENV === 'test' || process.env.CI || process.env.JEST_WORKER_ID)
+    ) {
       this.disabled = true;
     }
   }
@@ -54,7 +57,7 @@ export class CloudLoggingService {
       try {
         this.logging = new Logging({ projectId: this.projectId });
         this.log = this.logging.log('story-eval-mvp');
-      } catch (err) {
+      } catch {
         // Fail silently if Cloud Logging cannot be initialized
         // Disable Cloud Logging to prevent further attempts
         this.disabled = true;
@@ -122,11 +125,7 @@ export class CloudLoggingService {
     await this.writeLog('WARNING', message, metadata);
   }
 
-  async error(
-    message: string,
-    error?: Error | unknown,
-    metadata?: LogMetadata
-  ): Promise<void> {
+  async error(message: string, error?: Error | unknown, metadata?: LogMetadata): Promise<void> {
     const errorDetails: ErrorDetails | undefined =
       error instanceof Error
         ? {
@@ -143,4 +142,3 @@ export class CloudLoggingService {
 // Export singleton instance - initialization is lazy
 // Disabled in test/CI environments to prevent authentication errors
 export const cloudLoggingService = new CloudLoggingService();
-
