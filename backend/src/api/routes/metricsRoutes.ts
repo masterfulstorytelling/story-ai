@@ -18,9 +18,7 @@ const router = Router();
 router.get('/metrics', (req: Request, res: Response) => {
   try {
     // Optional time window query parameter (in milliseconds)
-    const timeWindowMs = req.query.window
-      ? parseInt(req.query.window as string, 10)
-      : undefined;
+    const timeWindowMs = req.query.window ? parseInt(req.query.window as string, 10) : undefined;
 
     if (timeWindowMs && (isNaN(timeWindowMs) || timeWindowMs < 0)) {
       res.status(400).json({
@@ -49,7 +47,7 @@ router.get('/metrics', (req: Request, res: Response) => {
       },
       timeWindowMs: timeWindowMs || null,
     });
-  } catch (error) {
+  } catch {
     res.status(500).json({
       error: 'INTERNAL_ERROR',
       message: 'Failed to retrieve metrics',
@@ -58,4 +56,3 @@ router.get('/metrics', (req: Request, res: Response) => {
 });
 
 export default router;
-
