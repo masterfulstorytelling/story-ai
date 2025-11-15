@@ -16,6 +16,7 @@ import { logger } from '../../utils/logger';
 import { TaskPayload } from '../../services/taskService';
 import { processEvaluation as processWithAI } from '../../services/aiProcessingService';
 import { deliverReport } from '../../services/reportDeliveryService';
+import { metricsService } from '../../services/metricsService';
 
 /**
  * Process evaluation request handler
@@ -27,6 +28,7 @@ import { deliverReport } from '../../services/reportDeliveryService';
  */
 export async function processEvaluationHandler(req: Request, res: Response): Promise<void> {
   let submissionId: string | undefined;
+  const startTime = Date.now();
 
   try {
     // Parse request body (Cloud Tasks sends base64-encoded JSON)
@@ -111,6 +113,11 @@ export async function processEvaluationHandler(req: Request, res: Response): Pro
 
     logger.info('Evaluation request processing completed', { submissionId });
 
+    // Record success metrics
+    const processingTime = Date.now() - startTime;
+    metricsService.recordProcessingTime(submissionId, processingTime);
+    metricsService.recordSubmissionSuccess(submissionId);
+
     res.status(200).json({
       success: true,
       submissionId,
@@ -120,6 +127,14 @@ export async function processEvaluationHandler(req: Request, res: Response): Pro
     logger.error('Failed to process evaluation request', error, {
       submissionId,
     });
+
+    // Record failure metrics
+    if (submissionId) {
+      const processingTime = Date.now() - startTime;
+      metricsService.recordProcessingTime(submissionId, processingTime);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      metricsService.recordSubmissionFailure(submissionId, errorMessage);
+    }
 
     // Update status to failed if we have a submissionId
     if (submissionId) {
