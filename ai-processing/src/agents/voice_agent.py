@@ -1,6 +1,6 @@
 """Voice Agent - Evaluates voice, personality, and consistency."""
 
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Dict, Any
 from anthropic import Anthropic
 
@@ -57,7 +57,7 @@ Return: overall_assessment (distinct/generic/mixed), score (0-100), and findings
 
         return {
             "agent_name": "voice_agent",
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat() + "Z",
             "overall_assessment": data.get("overall_assessment", "mixed"),
             "score": data.get("score", 50),
             "findings": data.get("findings", {}),
@@ -66,7 +66,7 @@ Return: overall_assessment (distinct/generic/mixed), score (0-100), and findings
         logger.error(f"Error in voice evaluation: {e}")
         return {
             "agent_name": "voice_agent",
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat() + "Z",
             "overall_assessment": "generic",
             "score": 0,
             "findings": {},

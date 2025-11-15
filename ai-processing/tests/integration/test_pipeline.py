@@ -34,11 +34,18 @@ class TestAgentPipeline:
         from src.orchestration.pipeline import process_evaluation
 
         content = {
-            "scraped_content": {"homepage": {"text": "Test", "url": "https://example.com"}},
+            "scraped_content": {
+                "homepage": {
+                    "text": "We provide enterprise software solutions for Fortune 500 companies. Our platform helps CFOs manage financial operations efficiently. We serve large corporations and financial institutions.",
+                    "url": "https://example.com",
+                },
+            },
             "uploaded_content": [],
         }
 
-        result = process_evaluation(content)
+        user_provided_audience = "CFOs at Fortune 500 companies"
+
+        result = process_evaluation(content, user_provided_audience)
 
         # Verify agent outputs are present in correct order
         assert "audience_identification" in result or "audiences" in result
@@ -66,12 +73,17 @@ class TestAgentPipeline:
 
         content = {
             "scraped_content": {
-                "homepage": {"text": "Test content with specific quotes.", "url": "https://example.com"},
+                "homepage": {
+                    "text": "We provide enterprise software solutions for Fortune 500 companies. Our platform helps CFOs manage financial operations efficiently. We serve large corporations and financial institutions. Our unique approach combines AI-powered analytics with traditional financial management tools. As one customer said: 'This platform transformed our financial operations.'",
+                    "url": "https://example.com",
+                },
             },
             "uploaded_content": [],
         }
 
-        result = process_evaluation(content)
+        user_provided_audience = "CFOs at Fortune 500 companies"
+
+        result = process_evaluation(content, user_provided_audience)
 
         # Citations should be validated
         assert "validated_citations" in result or "citations" in result
@@ -82,12 +94,17 @@ class TestAgentPipeline:
 
         content = {
             "scraped_content": {
-                "homepage": {"text": "Test content", "url": "https://example.com"},
+                "homepage": {
+                    "text": "We provide enterprise software solutions for Fortune 500 companies. Our platform helps CFOs manage financial operations efficiently. We serve large corporations and financial institutions. Our unique approach combines AI-powered analytics with traditional financial management tools.",
+                    "url": "https://example.com",
+                },
             },
             "uploaded_content": [],
         }
 
-        result = process_evaluation(content)
+        user_provided_audience = "CFOs at Fortune 500 companies"
+
+        result = process_evaluation(content, user_provided_audience)
 
         assert "report" in result
         assert "report_content" in result or "pdf_content" in result

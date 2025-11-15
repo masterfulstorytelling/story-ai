@@ -1,6 +1,6 @@
 """Agent pipeline orchestration using LangGraph."""
 
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Dict, Any, Optional
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
@@ -275,7 +275,7 @@ def synthesis_node(state: AgentPipelineState) -> Dict[str, Any]:
         return {
             "report": {
                 "agent_name": "synthesis_agent",
-                "timestamp": datetime.utcnow().isoformat() + "Z",
+                "timestamp": datetime.now(UTC).isoformat() + "Z",
                 "report_content": (
                     "Report generation encountered an error. "
                     "Some assessments may be incomplete. "

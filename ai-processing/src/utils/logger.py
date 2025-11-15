@@ -3,7 +3,7 @@
 import json
 import logging
 import sys
-from datetime import datetime
+from datetime import datetime, UTC
 
 
 class JSONFormatter(logging.Formatter):
@@ -13,7 +13,7 @@ class JSONFormatter(logging.Formatter):
         log_entry = {
             "level": record.levelname.lower(),
             "message": record.getMessage(),
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat() + "Z",
         }
 
         # Add exception info if present

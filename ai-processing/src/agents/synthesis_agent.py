@@ -1,6 +1,6 @@
 """Synthesis/Editor Agent - Generates brutally honest report with validated citations."""
 
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Dict, Any, Optional
 from anthropic import Anthropic
 
@@ -86,7 +86,7 @@ Return the report content as a structured text.
 
         result = {
             "agent_name": "synthesis_agent",
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat() + "Z",
             "report_content": report_content,
         }
 
@@ -106,6 +106,6 @@ Return the report content as a structured text.
         logger.error(f"Error generating report: {e}")
         return {
             "agent_name": "synthesis_agent",
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat() + "Z",
             "report_content": "Error generating report. Please try again.",
         }
