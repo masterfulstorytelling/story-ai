@@ -173,15 +173,15 @@
 
 - [X] T087 [US2] Create Cloud Tasks handler for processing in backend/src/api/handlers/processEvaluation.ts
 - [X] T088 [US2] Implement AI processing API client in backend/src/services/aiProcessingService.ts (calls FastAPI service)
-- [ ] T089 [US2] Implement report delivery service in backend/src/services/reportDeliveryService.ts (email with PDF attachment)
-- [ ] T090 [US2] Create GET /evaluations/:id endpoint in backend/src/api/routes/evaluationRoutes.ts (status check)
-- [ ] T091 [US2] Integrate processing pipeline in backend/src/services/submissionService.ts (queue Cloud Task after submission)
+- [X] T089 [US2] Implement report delivery service in backend/src/services/reportDeliveryService.ts (email with PDF attachment)
+- [X] T090 [US2] Create GET /evaluations/:id endpoint in backend/src/api/routes/evaluationRoutes.ts (status check)
+- [X] T091 [US2] Integrate processing pipeline in backend/src/services/submissionService.ts (queue Cloud Task after submission)
 
 #### Error Handling
 
-- [ ] T092 [US2] Implement error handling for critical failures in ai-processing/src/orchestration/pipeline.py (fail fast, email user)
-- [ ] T093 [US2] Implement error handling for non-critical agent failures in ai-processing/src/orchestration/pipeline.py (continue with partial results)
-- [ ] T094 [US2] Implement processing timeout handling in ai-processing/src/services/processing_service.py (10-minute limit)
+- [X] T092 [US2] Implement error handling for critical failures in ai-processing/src/orchestration/pipeline.py (fail fast, email user)
+- [X] T093 [US2] Implement error handling for non-critical agent failures in ai-processing/src/orchestration/pipeline.py (continue with partial results)
+- [X] T094 [US2] Implement processing timeout handling in ai-processing/src/services/processing_service.py (10-minute limit)
 - [ ] T109 [US2] Verify all User Story 2 tests pass before proceeding to Polish phase (TDD checkpoint: run all tests T054-T060, ensure 100% pass rate)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently. Full end-to-end flow: submit → process → receive report.

@@ -16,10 +16,30 @@ import { getApp } from '../../src/app';
 
 // Mock GCP services for integration tests
 jest.mock('../../src/services/firestoreService', () => {
+  // Create a mock document that can be configured per test
+  const createMockDoc = (exists: boolean, data?: Record<string, unknown>) => ({
+    exists,
+    data: jest.fn(() => (exists ? data : undefined)),
+  });
+
   const mockCollection = {
-    doc: jest.fn(() => ({
-      set: jest.fn().mockResolvedValue(undefined),
-    })),
+    doc: jest.fn((id: string) => {
+      // Default: return a document that exists with sample data
+      // Tests can override this by mocking the doc function
+      return {
+        set: jest.fn().mockResolvedValue(undefined),
+        get: jest.fn().mockResolvedValue(
+          createMockDoc(true, {
+            id,
+            email: 'test@example.com',
+            url: 'https://example.com',
+            status: 'pending',
+            submitted_at: new Date().toISOString(),
+          })
+        ),
+        update: jest.fn().mockResolvedValue(undefined),
+      };
+    }),
   };
   return {
     getFirestore: jest.fn(() => ({
@@ -27,6 +47,7 @@ jest.mock('../../src/services/firestoreService', () => {
     })),
     COLLECTIONS: {
       EVALUATION_REQUESTS: 'evaluation_requests',
+      EVALUATIONS: 'evaluations',
     },
   };
 });

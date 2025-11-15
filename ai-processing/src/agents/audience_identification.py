@@ -1,7 +1,7 @@
 """Audience Identification Agent - Identifies target audiences from content."""
 
 import uuid
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Dict, Any, Optional
 from anthropic import Anthropic
 
@@ -116,14 +116,14 @@ specificity_score, source, rationale, citations (array with quote and source).
                         for c in aud_data.get("citations", [])
                     ]
                     if aud_data.get("citations")
-                    else None
+                    else []
                 ),
             )
             audiences.append(audience)
 
         return {
             "agent_name": "audience_identification",
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "audiences": [aud.dict() for aud in audiences],
         }
 
@@ -132,7 +132,7 @@ specificity_score, source, rationale, citations (array with quote and source).
         # Return default audience on error
         return {
             "agent_name": "audience_identification",
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "audiences": [
                 {
                     "id": str(uuid.uuid4()),

@@ -1,6 +1,6 @@
 """Vividness Agent - Evaluates vividness and memorability."""
 
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Dict, Any
 from anthropic import Anthropic
 
@@ -55,7 +55,7 @@ Return: overall_assessment (vivid/generic/mixed), score (0-100), findings.
 
         return {
             "agent_name": "vividness_storytelling_assessment",
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "overall_assessment": data.get("overall_assessment", "mixed"),
             "score": data.get("score", 50),
             "findings": data.get("findings", {}),
@@ -64,7 +64,7 @@ Return: overall_assessment (vivid/generic/mixed), score (0-100), findings.
         logger.error(f"Error in vividness evaluation: {e}")
         return {
             "agent_name": "vividness_storytelling_assessment",
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "overall_assessment": "generic",
             "score": 0,
             "findings": {},

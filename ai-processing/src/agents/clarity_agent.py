@@ -1,6 +1,6 @@
 """Clarity Agent - Evaluates clarity of messaging for a specific audience."""
 
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Dict, Any
 from anthropic import Anthropic
 
@@ -75,7 +75,12 @@ and citations array.
 
         json_match = re.search(r"\{.*\}", response_text, re.DOTALL)
         if json_match:
-            assessments_data = json.loads(json_match.group())
+            parsed_data = json.loads(json_match.group())
+            # Handle nested structure: if AI returns {"assessments": {...}}, extract it
+            if "assessments" in parsed_data and isinstance(parsed_data["assessments"], dict):
+                assessments_data = parsed_data["assessments"]
+            else:
+                assessments_data = parsed_data
         else:
             # Default assessments
             assessments_data = {
@@ -88,7 +93,7 @@ and citations array.
             "agent_name": "clarity_agent",
             "audience_id": audience.get("id"),
             "audience_description": audience.get("description"),
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "assessments": assessments_data,
         }
     except Exception as e:
@@ -97,7 +102,7 @@ and citations array.
             "agent_name": "clarity_agent",
             "audience_id": audience.get("id"),
             "audience_description": audience.get("description"),
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "assessments": {
                 "what_they_do": {"score": 0, "assessment": "Error in evaluation"},
                 "how_theyre_different": {"score": 0, "assessment": "Error in evaluation"},

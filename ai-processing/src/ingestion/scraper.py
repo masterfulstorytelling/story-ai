@@ -147,9 +147,12 @@ def scrape_website(url: str, timeout: int = 30000, max_redirects: int = 5) -> Sc
                 while (
                     redirect_count < max_redirects + 1
                 ):  # Check one more than max to detect excess
-                    check_response = requests.head(
-                        current_check_url, allow_redirects=False, timeout=5
+                    # Use GET instead of HEAD as some servers don't support HEAD for redirects
+                    check_response = requests.get(
+                        current_check_url, allow_redirects=False, timeout=10, stream=True
                     )
+                    # Close the connection immediately to avoid downloading content
+                    check_response.close()
 
                     # Check if it's a redirect (3xx status)
                     if check_response.status_code in (301, 302, 303, 307, 308):

@@ -1,6 +1,6 @@
 """Citation Validation Agent - Validates all citations against source material."""
 
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Dict, Any, List
 from difflib import SequenceMatcher
 
@@ -122,6 +122,6 @@ def validate_citations(
 
     return {
         "agent_name": "citation_validation_agent",
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(UTC).isoformat(),
         "validated_citations": validated_citations,
     }

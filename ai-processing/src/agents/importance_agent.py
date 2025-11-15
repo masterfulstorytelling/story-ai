@@ -1,6 +1,6 @@
 """Importance Agent - Evaluates why audience should care."""
 
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Dict, Any
 from anthropic import Anthropic
 
@@ -51,7 +51,7 @@ Assess the importance and relevance. Provide score (0-100) and assessment.
         return {
             "agent_name": "importance_agent",
             "audience_id": audience.get("id"),
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "assessment": data.get("assessment", "Default"),
             "score": data.get("score", 50),
         }
@@ -60,7 +60,7 @@ Assess the importance and relevance. Provide score (0-100) and assessment.
         return {
             "agent_name": "importance_agent",
             "audience_id": audience.get("id"),
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "assessment": "Error in evaluation",
             "score": 0,
         }

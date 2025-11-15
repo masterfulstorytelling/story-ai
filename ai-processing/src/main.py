@@ -1,6 +1,6 @@
 """FastAPI application entry point for AI processing layer."""
 
-from datetime import datetime
+from datetime import datetime, UTC
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -31,7 +31,7 @@ async def health_check():
     return {
         "status": "ok",
         "service": "ai-processing",
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(UTC).isoformat(),
     }
 
 
