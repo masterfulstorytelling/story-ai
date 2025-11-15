@@ -19,9 +19,17 @@ class IngestionService:
 
     def download_file_from_storage(self, bucket_name: str, file_path: str) -> bytes:
         """Download file from Cloud Storage."""
-        bucket = self.storage_client.bucket(bucket_name)
-        blob = bucket.blob(file_path)
-        return blob.download_as_bytes()
+        try:
+            bucket = self.storage_client.bucket(bucket_name)
+            blob = bucket.blob(file_path)
+            return blob.download_as_bytes()
+        except Exception as e:
+            logger.error(
+                f"Error downloading file from storage: {e}",
+                exc_info=True,
+                extra={"bucket": bucket_name, "file_path": file_path},
+            )
+            raise
 
     def ingest_content(
         self,
@@ -51,10 +59,18 @@ class IngestionService:
                 scraped = scrape_website(url)
                 result["scraped_content"] = scraped.to_dict()
             except InsufficientContentError as e:
-                logger.error(f"Insufficient content from {url}: {e}")
+                logger.error(
+                    f"Insufficient content from {url}: {e}",
+                    exc_info=True,
+                    extra={"url": url},
+                )
                 raise
             except ScrapingError as e:
-                logger.error(f"Error scraping {url}: {e}")
+                logger.error(
+                    f"Error scraping {url}: {e}",
+                    exc_info=True,
+                    extra={"url": url},
+                )
                 raise
 
         # Parse files if provided
@@ -72,10 +88,18 @@ class IngestionService:
                     parsed = parse_file(file_content, filename)
                     result["uploaded_content"].append(parsed.to_dict())
                 except UnsupportedFileFormatError as e:
-                    logger.error(f"Unsupported file format: {e}")
+                    logger.error(
+                        f"Unsupported file format: {e}",
+                        exc_info=True,
+                        extra={"filename": filename, "file_path": file_path, "bucket": file_bucket},
+                    )
                     raise
                 except FileParsingError as e:
-                    logger.error(f"Error parsing file {filename}: {e}")
+                    logger.error(
+                        f"Error parsing file {filename}: {e}",
+                        exc_info=True,
+                        extra={"filename": filename, "file_path": file_path, "bucket": file_bucket},
+                    )
                     raise
 
         return result

@@ -56,7 +56,14 @@ Assess the importance and relevance. Provide score (0-100) and assessment.
             "score": data.get("score", 50),
         }
     except Exception as e:
-        logger.error(f"Error in importance evaluation: {e}")
+        logger.error(
+            f"Error in importance evaluation: {e}",
+            exc_info=True,
+            extra={
+                "audience_id": audience.get("id"),
+                "audience_description": audience.get("description"),
+            },
+        )
         return {
             "agent_name": "importance_agent",
             "audience_id": audience.get("id"),

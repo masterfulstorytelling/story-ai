@@ -97,7 +97,14 @@ and citations array.
             "assessments": assessments_data,
         }
     except Exception as e:
-        logger.error(f"Error in clarity evaluation: {e}")
+        logger.error(
+            f"Error in clarity evaluation: {e}",
+            exc_info=True,
+            extra={
+                "audience_id": audience.get("id"),
+                "audience_description": audience.get("description"),
+            },
+        )
         return {
             "agent_name": "clarity_agent",
             "audience_id": audience.get("id"),

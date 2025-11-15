@@ -24,9 +24,50 @@ class JSONFormatter(logging.Formatter):
                 "traceback": self.formatException(record.exc_info) if record.exc_info else None,
             }
 
-        # Add extra fields
+        # Add extra fields (from extra parameter in logger calls)
+        # Standard LogRecord attributes to exclude
+        standard_attrs = {
+            "name",
+            "msg",
+            "args",
+            "created",
+            "filename",
+            "funcName",
+            "getMessage",
+            "levelname",
+            "levelno",
+            "lineno",
+            "module",
+            "msecs",
+            "message",
+            "pathname",
+            "process",
+            "processName",
+            "relativeCreated",
+            "taskName",
+            "thread",
+            "threadName",
+            "exc_info",
+            "exc_text",
+            "stack_info",
+            "metadata",  # Special handling below
+        }
+
+        # Collect all extra fields
+        extra_fields = {}
+        for key, value in record.__dict__.items():
+            if key not in standard_attrs and not key.startswith("_"):
+                extra_fields[key] = value
+
+        # Also handle metadata if present (for backward compatibility)
         if hasattr(record, "metadata") and record.metadata:
-            log_entry["metadata"] = record.metadata
+            if isinstance(record.metadata, dict):
+                extra_fields.update(record.metadata)
+            else:
+                extra_fields["metadata"] = record.metadata
+
+        if extra_fields:
+            log_entry["metadata"] = extra_fields
 
         return json.dumps(log_entry)
 

@@ -103,7 +103,11 @@ Return the report content as a structured text.
 
         return result
     except Exception as e:
-        logger.error(f"Error generating report: {e}")
+        logger.error(
+            f"Error generating report: {e}",
+            exc_info=True,
+            extra={"failed_agents": failed_agents} if failed_agents else {},
+        )
         return {
             "agent_name": "synthesis_agent",
             "timestamp": datetime.now(UTC).isoformat(),
