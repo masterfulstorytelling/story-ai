@@ -13,7 +13,7 @@ class JSONFormatter(logging.Formatter):
         log_entry = {
             "level": record.levelname.lower(),
             "message": record.getMessage(),
-            "timestamp": datetime.now(UTC).isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
         # Add exception info if present

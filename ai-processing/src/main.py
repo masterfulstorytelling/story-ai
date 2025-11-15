@@ -31,7 +31,7 @@ async def health_check():
     return {
         "status": "ok",
         "service": "ai-processing",
-        "timestamp": datetime.now(UTC).isoformat() + "Z",
+        "timestamp": datetime.now(UTC).isoformat(),
     }
 
 

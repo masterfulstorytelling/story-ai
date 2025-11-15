@@ -93,7 +93,7 @@ and citations array.
             "agent_name": "clarity_agent",
             "audience_id": audience.get("id"),
             "audience_description": audience.get("description"),
-            "timestamp": datetime.now(UTC).isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "assessments": assessments_data,
         }
     except Exception as e:
@@ -102,7 +102,7 @@ and citations array.
             "agent_name": "clarity_agent",
             "audience_id": audience.get("id"),
             "audience_description": audience.get("description"),
-            "timestamp": datetime.now(UTC).isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "assessments": {
                 "what_they_do": {"score": 0, "assessment": "Error in evaluation"},
                 "how_theyre_different": {"score": 0, "assessment": "Error in evaluation"},

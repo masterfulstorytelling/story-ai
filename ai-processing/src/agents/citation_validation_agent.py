@@ -122,6 +122,6 @@ def validate_citations(
 
     return {
         "agent_name": "citation_validation_agent",
-        "timestamp": datetime.now(UTC).isoformat() + "Z",
+        "timestamp": datetime.now(UTC).isoformat(),
         "validated_citations": validated_citations,
     }

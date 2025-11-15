@@ -123,7 +123,7 @@ specificity_score, source, rationale, citations (array with quote and source).
 
         return {
             "agent_name": "audience_identification",
-            "timestamp": datetime.now(UTC).isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "audiences": [aud.dict() for aud in audiences],
         }
 
@@ -132,7 +132,7 @@ specificity_score, source, rationale, citations (array with quote and source).
         # Return default audience on error
         return {
             "agent_name": "audience_identification",
-            "timestamp": datetime.now(UTC).isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "audiences": [
                 {
                     "id": str(uuid.uuid4()),

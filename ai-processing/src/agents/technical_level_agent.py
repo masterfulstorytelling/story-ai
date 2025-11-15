@@ -53,7 +53,7 @@ Provide score (0-100), assessment text, and citations.
         return {
             "agent_name": "technical_level_agent",
             "audience_id": audience.get("id"),
-            "timestamp": datetime.now(UTC).isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "assessment": data.get("assessment", "Default"),
             "score": data.get("score", 50),
         }
@@ -62,7 +62,7 @@ Provide score (0-100), assessment text, and citations.
         return {
             "agent_name": "technical_level_agent",
             "audience_id": audience.get("id"),
-            "timestamp": datetime.now(UTC).isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "assessment": "Error in evaluation",
             "score": 0,
         }

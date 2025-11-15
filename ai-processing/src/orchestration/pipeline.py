@@ -275,7 +275,7 @@ def synthesis_node(state: AgentPipelineState) -> Dict[str, Any]:
         return {
             "report": {
                 "agent_name": "synthesis_agent",
-                "timestamp": datetime.now(UTC).isoformat() + "Z",
+                "timestamp": datetime.now(UTC).isoformat(),
                 "report_content": (
                     "Report generation encountered an error. "
                     "Some assessments may be incomplete. "
