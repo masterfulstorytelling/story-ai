@@ -1,3 +1,6 @@
+import { cloudLoggingService } from '../services/cloudLoggingService';
+import { errorTrackingService } from '../services/errorTrackingService';
+
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 interface LogEntry {
@@ -23,17 +26,32 @@ class Logger {
   }
 
   debug(message: string, metadata?: Record<string, unknown>): void {
+    const formatted = this.formatMessage('debug', message, metadata);
     if (process.env.NODE_ENV === 'development') {
-      console.debug(this.formatMessage('debug', message, metadata));
+      console.debug(formatted);
     }
+    // Send to Cloud Logging (async, fire and forget)
+    cloudLoggingService.debug(message, metadata).catch(() => {
+      // Already handled in cloudLoggingService
+    });
   }
 
   info(message: string, metadata?: Record<string, unknown>): void {
-    console.log(this.formatMessage('info', message, metadata));
+    const formatted = this.formatMessage('info', message, metadata);
+    console.log(formatted);
+    // Send to Cloud Logging (async, fire and forget)
+    cloudLoggingService.info(message, metadata).catch(() => {
+      // Already handled in cloudLoggingService
+    });
   }
 
   warn(message: string, metadata?: Record<string, unknown>): void {
-    console.warn(this.formatMessage('warn', message, metadata));
+    const formatted = this.formatMessage('warn', message, metadata);
+    console.warn(formatted);
+    // Send to Cloud Logging (async, fire and forget)
+    cloudLoggingService.warn(message, metadata).catch(() => {
+      // Already handled in cloudLoggingService
+    });
   }
 
   error(message: string, error?: Error | unknown, metadata?: Record<string, unknown>): void {
@@ -47,7 +65,18 @@ class Logger {
         },
       }),
     };
-    console.error(this.formatMessage('error', message, errorMetadata));
+    const formatted = this.formatMessage('error', message, errorMetadata);
+    console.error(formatted);
+
+    // Track error for monitoring
+    if (error instanceof Error) {
+      errorTrackingService.captureError(error, metadata);
+    }
+
+    // Send to Cloud Logging (async, fire and forget)
+    cloudLoggingService.error(message, error, metadata).catch(() => {
+      // Already handled in cloudLoggingService
+    });
   }
 }
 

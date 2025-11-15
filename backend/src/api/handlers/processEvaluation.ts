@@ -25,10 +25,7 @@ import { deliverReport } from '../../services/reportDeliveryService';
  *   submissionId: string
  * }
  */
-export async function processEvaluationHandler(
-  req: Request,
-  res: Response
-): Promise<void> {
+export async function processEvaluationHandler(req: Request, res: Response): Promise<void> {
   let submissionId: string | undefined;
 
   try {
@@ -46,9 +43,7 @@ export async function processEvaluationHandler(
 
     // Fetch evaluation request from Firestore
     const firestore = getFirestore();
-    const docRef = firestore
-      .collection(COLLECTIONS.EVALUATION_REQUESTS)
-      .doc(submissionId);
+    const docRef = firestore.collection(COLLECTIONS.EVALUATION_REQUESTS).doc(submissionId);
 
     const doc = await docRef.get();
 
@@ -72,9 +67,7 @@ export async function processEvaluationHandler(
     const processingResult = await processWithAI(evaluationRequest);
 
     if (processingResult.status === 'failed') {
-      throw new Error(
-        processingResult.error || 'AI processing service returned failed status'
-      );
+      throw new Error(processingResult.error || 'AI processing service returned failed status');
     }
 
     logger.info('AI processing completed', {
@@ -132,9 +125,7 @@ export async function processEvaluationHandler(
     if (submissionId) {
       try {
         const firestore = getFirestore();
-        const docRef = firestore
-          .collection(COLLECTIONS.EVALUATION_REQUESTS)
-          .doc(submissionId);
+        const docRef = firestore.collection(COLLECTIONS.EVALUATION_REQUESTS).doc(submissionId);
 
         const doc = await docRef.get();
         if (doc.exists) {
@@ -158,4 +149,3 @@ export async function processEvaluationHandler(
     });
   }
 }
-
