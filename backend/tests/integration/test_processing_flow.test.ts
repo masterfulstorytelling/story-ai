@@ -103,7 +103,7 @@ describe('Processing Flow Integration', () => {
     // Verify evaluation status (T090: GET /evaluations/:id endpoint not yet implemented)
     // Once T090 is implemented, this should return 200 with status
     const statusResponse = await request(app).get(`/v1/evaluations/${submissionId}`);
-    
+
     // For now, endpoint doesn't exist (404) or returns status when implemented
     if (statusResponse.status === 404) {
       // Expected until T090 is implemented

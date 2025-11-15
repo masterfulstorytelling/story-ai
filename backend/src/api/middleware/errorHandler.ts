@@ -1,10 +1,40 @@
 import { Request, Response, NextFunction } from 'express';
 import { logger } from '../../utils/logger';
+import { errorTrackingService } from '../../services/errorTrackingService';
+import { createAlertingService, AlertingConfig } from '../../services/alertingService';
 
 export interface AppError extends Error {
   statusCode?: number;
   code?: string;
 }
+
+// Initialize alerting service with configuration
+const alertingConfig: AlertingConfig = {
+  highErrorRate: {
+    threshold: 0.1, // 10% error rate
+    handler: (alert) => {
+      logger.warn('Alert triggered', {
+        alertType: alert.type,
+        severity: alert.severity,
+        message: alert.message,
+        context: alert.context,
+      });
+    },
+  },
+  longProcessingTime: {
+    threshold: 15 * 60 * 1000, // 15 minutes
+    handler: (alert) => {
+      logger.warn('Alert triggered', {
+        alertType: alert.type,
+        severity: alert.severity,
+        message: alert.message,
+        context: alert.context,
+      });
+    },
+  },
+};
+
+const alertingService = createAlertingService(alertingConfig);
 
 export function errorHandler(
   err: AppError,
@@ -12,11 +42,23 @@ export function errorHandler(
   res: Response,
   _next: NextFunction
 ): void {
-  logger.error('Request error', err, {
+  const context = {
     method: req.method,
     path: req.path,
     statusCode: err.statusCode,
-  });
+    ip: req.ip,
+  };
+
+  logger.error('Request error', err, context);
+
+  // Track error for monitoring (already done in logger.error, but ensure context is captured)
+  if (err instanceof Error) {
+    errorTrackingService.captureError(err, context);
+  }
+
+  // Record error for alerting
+  alertingService.recordError();
+  alertingService.checkAlerts();
 
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal server error';

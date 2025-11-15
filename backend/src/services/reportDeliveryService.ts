@@ -20,9 +20,7 @@ export interface ReportDeliveryOptions {
  * @param options - Report delivery options
  * @throws Error if delivery fails
  */
-export async function deliverReport(
-  options: ReportDeliveryOptions
-): Promise<void> {
+export async function deliverReport(options: ReportDeliveryOptions): Promise<void> {
   const { evaluationRequest, processingResult } = options;
   const { email } = evaluationRequest;
   const { pdf_content } = processingResult;
@@ -135,4 +133,3 @@ Feedforward AI Team`;
     throw error;
   }
 }
-

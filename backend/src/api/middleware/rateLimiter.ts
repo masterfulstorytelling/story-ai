@@ -7,6 +7,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { RateLimitService } from '../../services/rateLimitService';
+import { logger } from '../../utils/logger';
 
 const rateLimitService = new RateLimitService();
 
@@ -100,7 +101,11 @@ export async function rateLimiter(req: Request, res: Response, next: NextFunctio
     next();
   } catch (error) {
     // Log error but don't block request (fail open for rate limiting)
-    console.error('Rate limiting error:', error);
+    logger.error('Rate limiting error', error, {
+      ip: req.ip,
+      path: req.path,
+      method: req.method,
+    });
     next();
   }
 }

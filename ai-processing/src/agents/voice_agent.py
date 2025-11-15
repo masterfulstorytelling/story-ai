@@ -63,7 +63,7 @@ Return: overall_assessment (distinct/generic/mixed), score (0-100), and findings
             "findings": data.get("findings", {}),
         }
     except Exception as e:
-        logger.error(f"Error in voice evaluation: {e}")
+        logger.error(f"Error in voice evaluation: {e}", exc_info=True)
         return {
             "agent_name": "voice_agent",
             "timestamp": datetime.now(UTC).isoformat(),

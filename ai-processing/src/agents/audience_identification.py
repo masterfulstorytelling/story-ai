@@ -128,7 +128,11 @@ specificity_score, source, rationale, citations (array with quote and source).
         }
 
     except Exception as e:
-        logger.error(f"Error in audience identification: {e}")
+        logger.error(
+            f"Error in audience identification: {e}",
+            exc_info=True,
+            extra={"user_provided_audience": user_provided_audience},
+        )
         # Return default audience on error
         return {
             "agent_name": "audience_identification",

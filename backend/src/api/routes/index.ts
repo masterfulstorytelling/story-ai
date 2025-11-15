@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import evaluationRoutes from './evaluationRoutes';
+import metricsRoutes from './metricsRoutes';
 import { processEvaluationHandler } from '../handlers/processEvaluation';
 
 const router = Router();
@@ -14,5 +15,8 @@ router.post('/tasks/process', processEvaluationHandler);
 
 // Evaluation routes
 router.use(evaluationRoutes);
+
+// Metrics routes
+router.use('/v1', metricsRoutes);
 
 export default router;

@@ -61,7 +61,7 @@ Return: overall_assessment (vivid/generic/mixed), score (0-100), findings.
             "findings": data.get("findings", {}),
         }
     except Exception as e:
-        logger.error(f"Error in vividness evaluation: {e}")
+        logger.error(f"Error in vividness evaluation: {e}", exc_info=True)
         return {
             "agent_name": "vividness_storytelling_assessment",
             "timestamp": datetime.now(UTC).isoformat(),
