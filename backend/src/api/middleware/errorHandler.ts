@@ -61,7 +61,29 @@ export function errorHandler(
   alertingService.checkAlerts();
 
   const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal server error';
+
+  // Provide user-friendly error messages
+  let message = err.message || 'An unexpected error occurred. Please try again later.';
+
+  // Map common error codes to user-friendly messages
+  const errorMessages: Record<string, string> = {
+    VALIDATION_ERROR:
+      'The information you provided is invalid. Please check your input and try again.',
+    RATE_LIMIT_EXCEEDED: 'You have submitted too many requests. Please wait before trying again.',
+    FILE_TOO_LARGE: 'The file you uploaded is too large. Please upload a file smaller than 50MB.',
+    INVALID_FILE_TYPE: 'The file type is not supported. Please upload a PDF, PPTX, or DOCX file.',
+    MISSING_EMAIL: 'Email address is required.',
+    INVALID_EMAIL: 'Please provide a valid email address.',
+    NOT_FOUND: 'The requested resource was not found.',
+    UNAUTHORIZED: 'You are not authorized to perform this action.',
+    INTERNAL_ERROR: 'An internal error occurred. Our team has been notified and will investigate.',
+  };
+
+  // Use user-friendly message if available, otherwise use original message
+  const errorCode = err.code || 'INTERNAL_ERROR';
+  if (errorMessages[errorCode]) {
+    message = errorMessages[errorCode];
+  }
 
   // Don't expose internal error details in production
   const response: { error: string; message: string; details?: unknown } = {

@@ -29,6 +29,9 @@ class EnvConfig(BaseModel):
     firestore_project_id: str = Field(..., description="GCP Firestore project ID")
     cloud_storage_bucket: str = Field(..., description="Cloud Storage bucket name")
     gcp_project_id: str = Field(..., description="GCP project ID")
+    cors_allowed_origins: Optional[str] = Field(
+        None, description="Comma-separated list of allowed CORS origins (default: *)"
+    )
 
     @field_validator("anthropic_api_key")
     @classmethod
@@ -54,6 +57,7 @@ def load_env_config() -> EnvConfig:
         firestore_project_id=os.getenv("FIRESTORE_PROJECT_ID", ""),
         cloud_storage_bucket=os.getenv("CLOUD_STORAGE_BUCKET", ""),
         gcp_project_id=os.getenv("GCP_PROJECT_ID", ""),
+        cors_allowed_origins=os.getenv("CORS_ALLOWED_ORIGINS"),
     )
 
 

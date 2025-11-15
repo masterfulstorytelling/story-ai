@@ -8,7 +8,7 @@ description: "Task list template for feature implementation"
 **Input**: Design documents from `/specs/[###-feature-name]/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
+**Tests**: **MANDATORY per Constitution Principle VII (TDD NON-NEGOTIABLE)**. All phases MUST include test tasks. Tests MUST be written before implementation (red-green-refactor cycle). All tests MUST pass before proceeding to the next phase or checkpoint.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -69,7 +69,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T008 Configure error handling and logging infrastructure
 - [ ] T009 Setup environment configuration management
 
-**Checkpoint**: Foundation ready - user story implementation can now begin in parallel
+**⚠️ TDD CHECKPOINT**: Run all foundational tests and verify they pass before proceeding to user story phases. All tests MUST pass per Constitution Principle VII.
 
 ---
 
@@ -79,9 +79,9 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
+### Tests for User Story 1 (MANDATORY - TDD NON-NEGOTIABLE) ⚠️
 
-> **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
+> **⚠️ CONSTITUTION REQUIREMENT**: Write these tests FIRST, ensure they FAIL before implementation. All tests MUST pass before proceeding to implementation tasks.
 
 - [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
 - [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
@@ -95,7 +95,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T016 [US1] Add validation and error handling
 - [ ] T017 [US1] Add logging for user story 1 operations
 
-**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
+**⚠️ TDD CHECKPOINT**: Run all User Story 1 tests (T010-T011) and verify 100% pass rate. All tests MUST pass before proceeding to Phase 4 per Constitution Principle VII.
 
 ---
 
@@ -105,7 +105,9 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
+### Tests for User Story 2 (MANDATORY - TDD NON-NEGOTIABLE) ⚠️
+
+> **⚠️ CONSTITUTION REQUIREMENT**: Write these tests FIRST, ensure they FAIL before implementation. All tests MUST pass before proceeding to implementation tasks.
 
 - [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
 - [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
@@ -117,7 +119,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
 - [ ] T023 [US2] Integrate with User Story 1 components (if needed)
 
-**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
+**⚠️ TDD CHECKPOINT**: Run all User Story 1 and 2 tests and verify 100% pass rate. All tests MUST pass before proceeding to Phase 5 per Constitution Principle VII.
 
 ---
 
@@ -127,7 +129,9 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
+### Tests for User Story 3 (MANDATORY - TDD NON-NEGOTIABLE) ⚠️
+
+> **⚠️ CONSTITUTION REQUIREMENT**: Write these tests FIRST, ensure they FAIL before implementation. All tests MUST pass before proceeding to implementation tasks.
 
 - [ ] T024 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
 - [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
@@ -138,7 +142,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T027 [US3] Implement [Service] in src/services/[service].py
 - [ ] T028 [US3] Implement [endpoint/feature] in src/[location]/[file].py
 
-**Checkpoint**: All user stories should now be independently functional
+**⚠️ TDD CHECKPOINT**: Run all tests for all user stories and verify 100% pass rate. All tests MUST pass before proceeding to Polish phase per Constitution Principle VII.
 
 ---
 
@@ -153,7 +157,7 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] TXXX [P] Documentation updates in docs/
 - [ ] TXXX Code cleanup and refactoring
 - [ ] TXXX Performance optimization across all stories
-- [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
+- [ ] TXXX [P] Additional unit tests in tests/unit/ (TDD coverage expansion)
 - [ ] TXXX Security hardening
 - [ ] TXXX Run quickstart.md validation
 
@@ -176,13 +180,14 @@ Examples of foundational tasks (adjust based on your project):
 - **User Story 2 (P2)**: Can start after Foundational (Phase 2) - May integrate with US1 but should be independently testable
 - **User Story 3 (P3)**: Can start after Foundational (Phase 2) - May integrate with US1/US2 but should be independently testable
 
-### Within Each User Story
+### Within Each User Story (TDD MANDATORY)
 
-- Tests (if included) MUST be written and FAIL before implementation
+- **Tests MUST be written FIRST and FAIL before implementation** (Constitution Principle VII)
+- **All tests MUST pass before proceeding to next phase** (Constitution Principle VII)
 - Models before services
 - Services before endpoints
 - Core implementation before integration
-- Story complete before moving to next priority
+- Story complete and all tests passing before moving to next priority
 
 ### Parallel Opportunities
 
@@ -198,7 +203,7 @@ Examples of foundational tasks (adjust based on your project):
 ## Parallel Example: User Story 1
 
 ```bash
-# Launch all tests for User Story 1 together (if tests requested):
+# Launch all tests for User Story 1 together (MANDATORY - TDD):
 Task: "Contract test for [endpoint] in tests/contract/test_[name].py"
 Task: "Integration test for [user journey] in tests/integration/test_[name].py"
 
@@ -215,17 +220,18 @@ Task: "Create [Entity2] model in src/models/[entity2].py"
 
 1. Complete Phase 1: Setup
 2. Complete Phase 2: Foundational (CRITICAL - blocks all stories)
-3. Complete Phase 3: User Story 1
-4. **STOP and VALIDATE**: Test User Story 1 independently
-5. Deploy/demo if ready
+3. **TDD CHECKPOINT**: Run all foundational tests, verify 100% pass rate
+4. Complete Phase 3: User Story 1 (tests FIRST, then implementation)
+5. **TDD CHECKPOINT**: Run all User Story 1 tests, verify 100% pass rate
+6. Deploy/demo if ready
 
 ### Incremental Delivery
 
-1. Complete Setup + Foundational → Foundation ready
-2. Add User Story 1 → Test independently → Deploy/Demo (MVP!)
-3. Add User Story 2 → Test independently → Deploy/Demo
-4. Add User Story 3 → Test independently → Deploy/Demo
-5. Each story adds value without breaking previous stories
+1. Complete Setup + Foundational → **TDD CHECKPOINT**: All foundational tests pass
+2. Add User Story 1 (tests FIRST) → **TDD CHECKPOINT**: All US1 tests pass → Deploy/Demo (MVP!)
+3. Add User Story 2 (tests FIRST) → **TDD CHECKPOINT**: All US1+US2 tests pass → Deploy/Demo
+4. Add User Story 3 (tests FIRST) → **TDD CHECKPOINT**: All US1+US2+US3 tests pass → Deploy/Demo
+5. Each story adds value without breaking previous stories (validated by tests)
 
 ### Parallel Team Strategy
 

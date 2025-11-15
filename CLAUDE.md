@@ -12,6 +12,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Methodology
 
+**⚠️ TDD IS NON-NEGOTIABLE**: Per Constitution Principle VII, tests MUST be written before implementation and MUST pass before proceeding to the next phase. NEVER ask "should we proceed?" without first running and verifying all tests pass.
+
 This project follows the **Specify framework** (integrated Design Thinking + Jobs-to-be-Done + Lean Startup methodology):
 
 ### Specify Slash Commands
@@ -34,15 +36,22 @@ This project follows the **Specify framework** (integrated Design Thinking + Job
 **Required workflow**:
 1. Read active-plan.md BEFORE making changes
 2. Complete sub-steps IN ORDER, one at a time
-3. After completing each sub-step, ASK: "Sub-step [X] complete. Ready to proceed to sub-step [Y]?"
-4. WAIT for explicit user confirmation
-5. Update active-plan.md to mark current complete, next as current
-6. Then proceed
+3. **TDD CHECKPOINT (MANDATORY)**: After completing each sub-step that involves implementation:
+   - If the sub-step completed a phase or major feature, you MUST run all relevant tests
+   - Verify 100% test pass rate before asking to proceed
+   - Report: "Sub-step [X] complete. All tests passing (X/Y passed). Ready to proceed to sub-step [Y]?"
+4. **If tests fail**: DO NOT ask to proceed. Fix failing tests first.
+5. **If no tests exist**: DO NOT ask to proceed. State that tests must be written per Constitution Principle VII.
+6. WAIT for explicit user confirmation
+7. Update active-plan.md to mark current complete, next as current
+8. Then proceed
 
 **Do NOT**:
 - Skip ahead without approval
 - Combine multiple sub-steps
 - Proceed without explicit "yes"
+- **Ask to proceed without running tests** (violates Constitution Principle VII - TDD NON-NEGOTIABLE)
+- **Skip testing between phases** (violates Constitution Principle VII)
 
 ### Project Documents Structure
 
@@ -141,8 +150,32 @@ User Input + Scraped Content
 
 1. Use `/speckit.specify` to create/update specifications
 2. Use `/speckit.plan` to generate implementation plan
-3. Use `/speckit.tasks` to create actionable task list
+3. Use `/speckit.tasks` to create actionable task list (tests are MANDATORY per Constitution)
 4. Use `/speckit.implement` to execute systematically
+5. **TDD CHECKPOINT**: After each phase, run all tests and verify 100% pass rate before proceeding
+
+### Test-Driven Development (TDD) Requirements
+
+**⚠️ CONSTITUTION PRINCIPLE VII - NON-NEGOTIABLE**:
+
+- **Tests MUST be written BEFORE implementation** (red-green-refactor cycle)
+- **All tests MUST pass before proceeding to the next phase**
+- **NEVER ask "should we proceed?" without first running and verifying all tests pass**
+- **NEVER skip testing between phases** - this is a hard requirement
+
+**When completing a phase**:
+1. Run all relevant tests
+2. Verify 100% pass rate
+3. Report: "Phase [X] complete. All tests passing (X/Y passed). Ready to proceed to Phase [Y]?"
+
+**If tests fail**:
+- DO NOT ask to proceed
+- Fix failing tests first
+- Then report test results
+
+**If no tests exist**:
+- DO NOT ask to proceed
+- State: "Per Constitution Principle VII, tests MUST be written and passing before proceeding. Should I write tests for this phase first?"
 
 ### Agent Development Guidelines
 
