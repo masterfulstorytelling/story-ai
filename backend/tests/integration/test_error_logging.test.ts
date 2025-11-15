@@ -37,11 +37,10 @@ describe('Comprehensive Error Logging', () => {
             size: 100,
             fieldname: 'files',
             encoding: '7bit',
-            stream: {} as any,
             destination: '',
             filename: '',
             path: '',
-          },
+          } as Express.Multer.File,
         ],
       };
 
@@ -111,4 +110,3 @@ describe('Comprehensive Error Logging', () => {
     });
   });
 });
-

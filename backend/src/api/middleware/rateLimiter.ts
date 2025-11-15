@@ -7,6 +7,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { RateLimitService } from '../../services/rateLimitService';
+import { logger } from '../../utils/logger';
 
 const rateLimitService = new RateLimitService();
 
