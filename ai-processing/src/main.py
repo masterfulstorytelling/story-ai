@@ -1,6 +1,7 @@
 """FastAPI application entry point for AI processing layer."""
 
 from datetime import datetime, UTC
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
