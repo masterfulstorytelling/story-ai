@@ -12,6 +12,9 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+# Verify tsconfig.json is present
+RUN ls -la tsconfig.json || echo "tsconfig.json not found"
+
 # Build TypeScript
 RUN npm run build
 
