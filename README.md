@@ -42,6 +42,8 @@ cd ai-processing
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+pip install -r requirements-dev.txt  # Includes pre-commit, black, flake8
+pre-commit install  # REQUIRED: Install git hooks for automatic formatting
 uvicorn src.main:app --reload
 ```
 
