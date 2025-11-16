@@ -31,7 +31,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install black flake8 mypy
+          pip install -r requirements-dev.txt
+          # Install pre-commit to verify hooks would pass
+          pip install pre-commit
       
       - name: Install WeasyPrint system dependencies
         run: |
@@ -48,9 +50,17 @@ jobs:
         working-directory: ./ai-processing
         run: playwright install chromium
       
-      - name: Run Black (format check)
+      - name: Verify pre-commit hooks would pass
         working-directory: ./ai-processing
-        run: black --check src/
+        run: |
+          # This simulates what pre-commit hooks do
+          # If this fails, it means hooks aren't configured correctly
+          pre-commit run --all-files --hook-stage commit || (
+            echo "ERROR: Pre-commit hooks would fail!"
+            echo "This means code wasn't formatted before commit."
+            echo "Developers must run: cd ai-processing && pre-commit install"
+            exit 1
+          )
       
       - name: Run flake8 (linting)
         working-directory: ./ai-processing
