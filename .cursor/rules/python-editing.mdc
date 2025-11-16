@@ -1,0 +1,55 @@
+# Python File Editing Rule - CRITICAL
+
+## MANDATORY WORKFLOW
+
+**When editing ANY Python file, you MUST:**
+
+1. **Edit the file**
+2. **IMMEDIATELY run:** `black <file_path>`
+3. **Verify:** `black --check <file_path>` passes
+4. **THEN commit**
+
+## Why This Rule Exists
+
+We've had 20+ commits fixing Black formatting issues. The root cause:
+- Code edited manually
+- Black not run before commit
+- CI fails
+- Fix applied
+- Cycle repeats
+
+## Enforcement
+
+**This rule is MANDATORY. No exceptions.**
+
+If you edit a Python file and don't run Black:
+- The commit will fail CI
+- You'll have to fix it
+- This wastes time
+
+## Example Workflow
+
+```bash
+# Edit file
+vim src/agents/synthesis_agent.py
+
+# IMMEDIATELY run Black
+black src/agents/synthesis_agent.py
+
+# Verify
+black --check src/agents/synthesis_agent.py
+
+# Then commit
+git add src/agents/synthesis_agent.py
+git commit -m "feat: Add new feature"
+```
+
+## Alternative: Use Black Format on Save
+
+If your editor supports it, configure Black to format on save. This prevents the issue entirely.
+
+## Remember
+
+**NEVER commit Python code without running Black first.**
+
+This is not optional. This is mandatory.

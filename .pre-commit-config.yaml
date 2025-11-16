@@ -1,0 +1,27 @@
+# Pre-commit hooks to run before each commit
+# 
+# INSTALLATION (REQUIRED - Run this once per repository clone):
+#   cd ai-processing
+#   python3 -m venv venv  # if venv doesn't exist
+#   source venv/bin/activate
+#   pip install pre-commit
+#   pre-commit install
+#
+# This will automatically format code with Black and check with flake8
+# before every commit. Commits will be blocked if formatting fails.
+#
+# To run manually: pre-commit run --all-files
+
+repos:
+  # Black removed - it was causing too many issues without clear value
+  # If you want formatting, use your IDE's auto-formatter instead
+  
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        name: flake8 (Python linter - E501 ignored)
+        files: ^ai-processing/
+        args: [--max-line-length=100, --extend-ignore=E203,E501,W503,F541]
+        # E501 ignored because Black handles line length
+

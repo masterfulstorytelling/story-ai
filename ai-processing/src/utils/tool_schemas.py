@@ -51,7 +51,10 @@ CLARITY_TOOL = {
                     "properties": {
                         "category": {
                             "type": "string",
-                            "description": "Category of clarity issue (e.g., 'what_they_do', 'how_theyre_different', 'who_uses_them')",
+                            "description": (
+                                "Category of clarity issue (e.g., 'what_they_do', "
+                                "'how_theyre_different', 'who_uses_them')"
+                            ),
                         },
                         "severity": {
                             "type": "string",
@@ -91,7 +94,10 @@ TECHNICAL_LEVEL_TOOL = {
             },
             "audience_technical_level": {
                 "type": "string",
-                "description": "Expected technical level of the audience (e.g., 'expert', 'intermediate', 'novice')",
+                "description": (
+                    "Expected technical level of the audience "
+                    "(e.g., 'expert', 'intermediate', 'novice')"
+                ),
             },
             "content_technical_level": {
                 "type": "string",
@@ -109,7 +115,10 @@ TECHNICAL_LEVEL_TOOL = {
                     "properties": {
                         "mismatch_type": {
                             "type": "string",
-                            "description": "Type of mismatch (e.g., 'too_technical', 'too_vague', 'jargon_heavy')",
+                            "description": (
+                                "Type of mismatch (e.g., 'too_technical', "
+                                "'too_vague', 'jargon_heavy')"
+                            ),
                         },
                         "severity": {"type": "string", "enum": ["high", "medium", "low"]},
                         "description": {
@@ -156,7 +165,10 @@ IMPORTANCE_TOOL = {
                     "properties": {
                         "stake_type": {
                             "type": "string",
-                            "description": "Type of stake (e.g., 'financial', 'operational', 'reputational', 'compliance')",
+                            "description": (
+                                "Type of stake (e.g., 'financial', 'operational', "
+                                "'reputational', 'compliance')"
+                            ),
                         },
                         "description": {
                             "type": "string",
@@ -218,7 +230,10 @@ VOICE_TOOL = {
                     "properties": {
                         "pattern_type": {
                             "type": "string",
-                            "description": "Type of voice pattern (e.g., 'authoritative', 'conversational', 'technical', 'sales-oriented')",
+                            "description": (
+                                "Type of voice pattern (e.g., 'authoritative', "
+                                "'conversational', 'technical', 'sales-oriented')"
+                            ),
                         },
                         "consistency_level": {
                             "type": "string",
@@ -265,7 +280,10 @@ VIVIDNESS_TOOL = {
                     "properties": {
                         "element_type": {
                             "type": "string",
-                            "description": "Type of vivid element (e.g., 'concrete_example', 'specific_metric', 'case_study', 'visual_language')",
+                            "description": (
+                                "Type of vivid element (e.g., 'concrete_example', "
+                                "'specific_metric', 'case_study', 'visual_language')"
+                            ),
                         },
                         "effectiveness_rating": {
                             "type": "string",
@@ -317,7 +335,11 @@ SYNTHESIS_TOOL = {
         "properties": {
             "executive_summary": {
                 "type": "string",
-                "description": "Brutally honest executive summary identifying the core problem and business impact. Include overall scores table for all three standard tiers.",
+                "description": (
+                    "Brutally honest executive summary identifying the core problem "
+                    "and business impact. Include overall scores table for all three "
+                    "standard tiers."
+                ),
             },
             "audience_analysis": {
                 "type": "object",
@@ -325,22 +347,31 @@ SYNTHESIS_TOOL = {
                 "properties": {
                     "implied_audience": {
                         "type": "string",
-                        "description": "Who the content is IMPLIED to be written for based on content analysis",
+                        "description": (
+                            "Who the content is IMPLIED to be written for based on "
+                            "content analysis"
+                        ),
                     },
                     "implied_audience_evidence": {
                         "type": "array",
-                        "description": "Evidence supporting the implied audience identification",
+                        "description": ("Evidence supporting the implied audience identification"),
                         "items": {"type": "string"},
                     },
                     "evaluated_audiences": {
                         "type": "array",
-                        "description": "List of all audiences being evaluated (3 standard tiers + additional identified)",
+                        "description": (
+                            "List of all audiences being evaluated "
+                            "(3 standard tiers + additional identified)"
+                        ),
                         "items": {
                             "type": "object",
                             "properties": {
                                 "tier": {
                                     "type": "string",
-                                    "description": "Audience tier (e.g., 'Technical Audience', 'Budget Approver', 'General Audience')",
+                                    "description": (
+                                        "Audience tier (e.g., 'Technical Audience', "
+                                        "'Budget Approver', 'General Audience')"
+                                    ),
                                 },
                                 "description": {
                                     "type": "string",
@@ -355,27 +386,48 @@ SYNTHESIS_TOOL = {
             },
             "clarity_assessment": {
                 "type": "string",
-                "description": "Detailed clarity assessment FOR EACH AUDIENCE (all three standard tiers + additional). Evaluate what/why/who clarity with scores.",
+                "description": (
+                    "Detailed clarity assessment FOR EACH AUDIENCE "
+                    "(all three standard tiers + additional). "
+                    "Evaluate what/why/who clarity with scores."
+                ),
             },
             "technical_appropriateness": {
                 "type": "string",
-                "description": "Technical level appropriateness FOR EACH AUDIENCE (all three standard tiers + additional). Assess if content level matches audience level with scores.",
+                "description": (
+                    "Technical level appropriateness FOR EACH AUDIENCE "
+                    "(all three standard tiers + additional). "
+                    "Assess if content level matches audience level with scores."
+                ),
             },
             "importance_value": {
                 "type": "string",
-                "description": "Importance and value assessment FOR EACH AUDIENCE (all three standard tiers + additional). Evaluate why they should care with scores.",
+                "description": (
+                    "Importance and value assessment FOR EACH AUDIENCE "
+                    "(all three standard tiers + additional). "
+                    "Evaluate why they should care with scores."
+                ),
             },
             "voice_personality": {
                 "type": "string",
-                "description": "Voice and personality assessment (applies to all audiences). Distinct voice characteristics and consistency.",
+                "description": (
+                    "Voice and personality assessment (applies to all audiences). "
+                    "Distinct voice characteristics and consistency."
+                ),
             },
             "storytelling_memorability": {
                 "type": "string",
-                "description": "Storytelling and vividness assessment (applies to all audiences). Concrete examples, specificity, memorability.",
+                "description": (
+                    "Storytelling and vividness assessment (applies to all audiences). "
+                    "Concrete examples, specificity, memorability."
+                ),
             },
             "recommendations": {
                 "type": "array",
-                "description": "Specific, actionable recommendations addressing gaps across all evaluated audiences",
+                "description": (
+                    "Specific, actionable recommendations addressing gaps across "
+                    "all evaluated audiences"
+                ),
                 "items": {
                     "type": "object",
                     "properties": {
@@ -402,7 +454,10 @@ SYNTHESIS_TOOL = {
             },
             "next_steps": {
                 "type": "string",
-                "description": "Gentle call-to-action for Feedforward AI services (not pushy, consultative tone)",
+                "description": (
+                    "Gentle call-to-action for Feedforward AI services "
+                    "(not pushy, consultative tone)"
+                ),
             },
         },
         "required": [
