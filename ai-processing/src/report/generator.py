@@ -133,6 +133,19 @@ def _render_dict_section(html: str, section_name: str, data: Optional[Dict[str, 
     """Render a dictionary section (e.g., clarity_assessment per audience)."""
     if not data:
         return _remove_section(html, section_name)
+    
+    # Handle case where data is a string instead of dict (e.g., error messages)
+    if isinstance(data, str):
+        # Render as simple text instead of dict
+        html = html.replace(f"{{% if {section_name} %}}", "")
+        html = html.replace(f"{{% endif %}}", "")
+        pattern = (
+            r"\{\% for audience, assessment in " + section_name + r"\.items\(\) \%\}.*?\{\% endfor \%\}"
+        )
+        import re
+        escaped_data = _escape_html(data)
+        html = re.sub(pattern, f"<div>{escaped_data}</div>", html, flags=re.DOTALL)
+        return html
 
     section_html = ""
     for audience, assessment in data.items():
