@@ -1,0 +1,21 @@
+# Pre-commit hooks to run before each commit
+# Install: pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        name: black (Python code formatter)
+        files: ^ai-processing/
+        args: [--line-length=100]
+        
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        name: flake8 (Python linter)
+        files: ^ai-processing/
+        args: [--max-line-length=100, --extend-ignore=E203,E501]
+

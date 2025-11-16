@@ -2,7 +2,7 @@
 
 import json
 import re
-from typing import Any, Optional, Union
+from typing import Optional, Union
 
 
 def extract_json_from_text(text: str) -> Optional[Union[dict, list]]:
@@ -173,7 +173,7 @@ def extract_json_from_text(text: str) -> Optional[Union[dict, list]]:
                 result = json.loads(content)
                 if isinstance(result, dict):
                     return result
-            except json.JSONDecodeError as e:
+            except json.JSONDecodeError:
                 # If it fails, try fixing trailing commas
                 content_fixed = fix_trailing_commas(content)
                 try:
