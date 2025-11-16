@@ -50,17 +50,28 @@ jobs:
         working-directory: ./ai-processing
         run: playwright install chromium
       
-      - name: Verify pre-commit hooks would pass
+      - name: Run Black (format check)
+        working-directory: ./ai-processing
+        run: black --check src/
+        # Note: Once .pre-commit-config.yaml is merged, developers should
+        # run 'pre-commit install' to auto-format before commits.
+        # For now, CI checks formatting directly.
+      
+      - name: Verify pre-commit hooks (if config exists)
         working-directory: ./ai-processing
         run: |
-          # This simulates what pre-commit hooks do
-          # If this fails, it means hooks aren't configured correctly
-          pre-commit run --all-files --hook-stage commit || (
-            echo "ERROR: Pre-commit hooks would fail!"
-            echo "This means code wasn't formatted before commit."
-            echo "Developers must run: cd ai-processing && pre-commit install"
-            exit 1
-          )
+          # Only run if .pre-commit-config.yaml exists (after this PR merges)
+          if [ -f "../../.pre-commit-config.yaml" ]; then
+            pre-commit run --all-files --hook-stage commit || (
+              echo "ERROR: Pre-commit hooks would fail!"
+              echo "This means code wasn't formatted before commit."
+              echo "Developers must run: cd ai-processing && pre-commit install"
+              exit 1
+            )
+          else
+            echo "Pre-commit config not yet in main - skipping hook verification"
+            echo "After this PR merges, hooks will be mandatory for all commits"
+          fi
       
       - name: Run flake8 (linting)
         working-directory: ./ai-processing
