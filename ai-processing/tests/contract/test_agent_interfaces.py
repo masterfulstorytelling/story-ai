@@ -234,6 +234,8 @@ class TestAgentInterfaceContracts:
         assert result["agent_name"] == "synthesis_agent"
         assert "timestamp" in result
         assert "report_content" in result
-        assert isinstance(result["report_content"], str)
-        assert len(result["report_content"]) > 0
+        # After Tool Use API migration, report_content is a dict (structured JSON)
+        assert isinstance(result["report_content"], dict)
+        assert "executive_summary" in result["report_content"]
+        assert "audience_analysis" in result["report_content"]
 
