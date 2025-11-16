@@ -8,31 +8,22 @@ Tool Use guarantees valid JSON conforming to the schema, eliminating parsing err
 CITATION_SCHEMA = {
     "type": "object",
     "properties": {
-        "quote": {
-            "type": "string",
-            "description": "Exact quote from the content"
-        },
+        "quote": {"type": "string", "description": "Exact quote from the content"},
         "source": {
             "type": "string",
-            "description": "Source of the quote (e.g., 'homepage', 'about page')"
-        }
+            "description": "Source of the quote (e.g., 'homepage', 'about page')",
+        },
     },
-    "required": ["quote", "source"]
+    "required": ["quote", "source"],
 }
 
 EVIDENCE_SCHEMA = {
     "type": "object",
     "properties": {
-        "quote": {
-            "type": "string",
-            "description": "Exact quote supporting the finding"
-        },
-        "source": {
-            "type": "string",
-            "description": "Source of the quote"
-        }
+        "quote": {"type": "string", "description": "Exact quote supporting the finding"},
+        "source": {"type": "string", "description": "Source of the quote"},
     },
-    "required": ["quote", "source"]
+    "required": ["quote", "source"],
 }
 
 # Clarity Agent Tool
@@ -46,11 +37,11 @@ CLARITY_TOOL = {
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 100,
-                "description": "Overall clarity score (0-100)"
+                "description": "Overall clarity score (0-100)",
             },
             "overall_assessment": {
                 "type": "string",
-                "description": "Overall textual assessment of clarity"
+                "description": "Overall textual assessment of clarity",
             },
             "issues": {
                 "type": "array",
@@ -63,29 +54,29 @@ CLARITY_TOOL = {
                             "description": (
                                 "Category of clarity issue (e.g., 'what_they_do', "
                                 "'how_theyre_different', 'who_uses_them')"
-                            )
+                            ),
                         },
                         "severity": {
                             "type": "string",
                             "enum": ["high", "medium", "low"],
-                            "description": "Severity level of the issue"
+                            "description": "Severity level of the issue",
                         },
                         "description": {
                             "type": "string",
-                            "description": "Description of the clarity issue"
+                            "description": "Description of the clarity issue",
                         },
                         "evidence": {
                             "type": "array",
                             "description": "Supporting quotes from content",
-                            "items": EVIDENCE_SCHEMA
-                        }
+                            "items": EVIDENCE_SCHEMA,
+                        },
                     },
-                    "required": ["category", "severity", "description"]
-                }
-            }
+                    "required": ["category", "severity", "description"],
+                },
+            },
         },
-        "required": ["overall_clarity_score", "overall_assessment"]
-    }
+        "required": ["overall_clarity_score", "overall_assessment"],
+    },
 }
 
 # Technical Level Agent Tool
@@ -99,22 +90,22 @@ TECHNICAL_LEVEL_TOOL = {
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 100,
-                "description": "How well the technical level matches the audience (0-100)"
+                "description": "How well the technical level matches the audience (0-100)",
             },
             "audience_technical_level": {
                 "type": "string",
                 "description": (
                     "Expected technical level of the audience "
                     "(e.g., 'expert', 'intermediate', 'novice')"
-                )
+                ),
             },
             "content_technical_level": {
                 "type": "string",
-                "description": "Actual technical level of the content"
+                "description": "Actual technical level of the content",
             },
             "overall_assessment": {
                 "type": "string",
-                "description": "Overall assessment of technical level appropriateness"
+                "description": "Overall assessment of technical level appropriateness",
             },
             "mismatches": {
                 "type": "array",
@@ -127,32 +118,26 @@ TECHNICAL_LEVEL_TOOL = {
                             "description": (
                                 "Type of mismatch (e.g., 'too_technical', "
                                 "'too_vague', 'jargon_heavy')"
-                            )
+                            ),
                         },
-                        "severity": {
-                            "type": "string",
-                            "enum": ["high", "medium", "low"]
-                        },
+                        "severity": {"type": "string", "enum": ["high", "medium", "low"]},
                         "description": {
                             "type": "string",
-                            "description": "Description of the mismatch"
+                            "description": "Description of the mismatch",
                         },
-                        "evidence": {
-                            "type": "array",
-                            "items": EVIDENCE_SCHEMA
-                        }
+                        "evidence": {"type": "array", "items": EVIDENCE_SCHEMA},
                     },
-                    "required": ["mismatch_type", "severity", "description"]
-                }
-            }
+                    "required": ["mismatch_type", "severity", "description"],
+                },
+            },
         },
         "required": [
             "technical_alignment_score",
             "audience_technical_level",
             "content_technical_level",
-            "overall_assessment"
-        ]
-    }
+            "overall_assessment",
+        ],
+    },
 }
 
 # Importance Agent Tool
@@ -166,11 +151,11 @@ IMPORTANCE_TOOL = {
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 100,
-                "description": "How clearly the stakes/importance are communicated (0-100)"
+                "description": "How clearly the stakes/importance are communicated (0-100)",
             },
             "overall_assessment": {
                 "type": "string",
-                "description": "Overall assessment of stakes clarity"
+                "description": "Overall assessment of stakes clarity",
             },
             "stakes_identified": {
                 "type": "array",
@@ -183,24 +168,21 @@ IMPORTANCE_TOOL = {
                             "description": (
                                 "Type of stake (e.g., 'financial', 'operational', "
                                 "'reputational', 'compliance')"
-                            )
+                            ),
                         },
                         "description": {
                             "type": "string",
-                            "description": "Description of the stake"
+                            "description": "Description of the stake",
                         },
                         "clarity_level": {
                             "type": "string",
                             "enum": ["clear", "implied", "unclear"],
-                            "description": "How clearly this stake is communicated"
+                            "description": "How clearly this stake is communicated",
                         },
-                        "evidence": {
-                            "type": "array",
-                            "items": EVIDENCE_SCHEMA
-                        }
+                        "evidence": {"type": "array", "items": EVIDENCE_SCHEMA},
                     },
-                    "required": ["stake_type", "description", "clarity_level"]
-                }
+                    "required": ["stake_type", "description", "clarity_level"],
+                },
             },
             "weaknesses": {
                 "type": "array",
@@ -208,21 +190,18 @@ IMPORTANCE_TOOL = {
                 "items": {
                     "type": "object",
                     "properties": {
-                        "weakness_type": {
-                            "type": "string",
-                            "description": "Type of weakness"
-                        },
+                        "weakness_type": {"type": "string", "description": "Type of weakness"},
                         "description": {
                             "type": "string",
-                            "description": "Description of the weakness"
-                        }
+                            "description": "Description of the weakness",
+                        },
                     },
-                    "required": ["weakness_type", "description"]
-                }
-            }
+                    "required": ["weakness_type", "description"],
+                },
+            },
         },
-        "required": ["stakes_clarity_score", "overall_assessment"]
-    }
+        "required": ["stakes_clarity_score", "overall_assessment"],
+    },
 }
 
 # Voice Agent Tool
@@ -236,16 +215,13 @@ VOICE_TOOL = {
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 100,
-                "description": "How consistent the voice is across content (0-100)"
+                "description": "How consistent the voice is across content (0-100)",
             },
             "dominant_voice_characteristics": {
                 "type": "string",
-                "description": "Description of the dominant voice characteristics"
+                "description": "Description of the dominant voice characteristics",
             },
-            "overall_assessment": {
-                "type": "string",
-                "description": "Overall voice assessment"
-            },
+            "overall_assessment": {"type": "string", "description": "Overall voice assessment"},
             "voice_patterns": {
                 "type": "array",
                 "description": "Voice patterns detected in content",
@@ -257,32 +233,29 @@ VOICE_TOOL = {
                             "description": (
                                 "Type of voice pattern (e.g., 'authoritative', "
                                 "'conversational', 'technical', 'sales-oriented')"
-                            )
+                            ),
                         },
                         "consistency_level": {
                             "type": "string",
                             "enum": ["consistent", "inconsistent", "mixed"],
-                            "description": "How consistently this pattern appears"
+                            "description": "How consistently this pattern appears",
                         },
                         "description": {
                             "type": "string",
-                            "description": "Description of the pattern"
+                            "description": "Description of the pattern",
                         },
-                        "evidence": {
-                            "type": "array",
-                            "items": EVIDENCE_SCHEMA
-                        }
+                        "evidence": {"type": "array", "items": EVIDENCE_SCHEMA},
                     },
-                    "required": ["pattern_type", "consistency_level", "description"]
-                }
-            }
+                    "required": ["pattern_type", "consistency_level", "description"],
+                },
+            },
         },
         "required": [
             "voice_consistency_score",
             "dominant_voice_characteristics",
-            "overall_assessment"
-        ]
-    }
+            "overall_assessment",
+        ],
+    },
 }
 
 # Vividness Agent Tool
@@ -296,12 +269,9 @@ VIVIDNESS_TOOL = {
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 100,
-                "description": "Overall vividness/concreteness score (0-100)"
+                "description": "Overall vividness/concreteness score (0-100)",
             },
-            "overall_assessment": {
-                "type": "string",
-                "description": "Overall vividness assessment"
-            },
+            "overall_assessment": {"type": "string", "description": "Overall vividness assessment"},
             "vivid_elements": {
                 "type": "array",
                 "description": "Vivid elements identified in content",
@@ -313,25 +283,25 @@ VIVIDNESS_TOOL = {
                             "description": (
                                 "Type of vivid element (e.g., 'concrete_example', "
                                 "'specific_metric', 'case_study', 'visual_language')"
-                            )
+                            ),
                         },
                         "effectiveness_rating": {
                             "type": "string",
                             "enum": ["high", "medium", "low"],
-                            "description": "How effective this element is"
+                            "description": "How effective this element is",
                         },
                         "description": {
                             "type": "string",
-                            "description": "Description of the element"
+                            "description": "Description of the element",
                         },
                         "examples": {
                             "type": "array",
                             "description": "Examples from content",
-                            "items": EVIDENCE_SCHEMA
-                        }
+                            "items": EVIDENCE_SCHEMA,
+                        },
                     },
-                    "required": ["element_type", "effectiveness_rating", "description"]
-                }
+                    "required": ["element_type", "effectiveness_rating", "description"],
+                },
             },
             "missed_opportunities": {
                 "type": "array",
@@ -341,19 +311,19 @@ VIVIDNESS_TOOL = {
                     "properties": {
                         "opportunity_type": {
                             "type": "string",
-                            "description": "Type of missed opportunity"
+                            "description": "Type of missed opportunity",
                         },
                         "description": {
                             "type": "string",
-                            "description": "Description of the opportunity"
-                        }
+                            "description": "Description of the opportunity",
+                        },
                     },
-                    "required": ["opportunity_type", "description"]
-                }
-            }
+                    "required": ["opportunity_type", "description"],
+                },
+            },
         },
-        "required": ["vividness_score", "overall_assessment"]
-    }
+        "required": ["vividness_score", "overall_assessment"],
+    },
 }
 
 # Synthesis Agent Tool
@@ -369,7 +339,7 @@ SYNTHESIS_TOOL = {
                     "Brutally honest executive summary identifying the core problem "
                     "and business impact. Include overall scores table for all three "
                     "standard tiers."
-                )
+                ),
             },
             "audience_analysis": {
                 "type": "object",
@@ -380,14 +350,12 @@ SYNTHESIS_TOOL = {
                         "description": (
                             "Who the content is IMPLIED to be written for based on "
                             "content analysis"
-                        )
+                        ),
                     },
                     "implied_audience_evidence": {
                         "type": "array",
-                        "description": (
-                            "Evidence supporting the implied audience identification"
-                        ),
-                        "items": {"type": "string"}
+                        "description": ("Evidence supporting the implied audience identification"),
+                        "items": {"type": "string"},
                     },
                     "evaluated_audiences": {
                         "type": "array",
@@ -403,18 +371,18 @@ SYNTHESIS_TOOL = {
                                     "description": (
                                         "Audience tier (e.g., 'Technical Audience', "
                                         "'Budget Approver', 'General Audience')"
-                                    )
+                                    ),
                                 },
                                 "description": {
                                     "type": "string",
-                                    "description": "Description of the audience"
-                                }
+                                    "description": "Description of the audience",
+                                },
                             },
-                            "required": ["tier", "description"]
-                        }
-                    }
+                            "required": ["tier", "description"],
+                        },
+                    },
                 },
-                "required": ["implied_audience", "evaluated_audiences"]
+                "required": ["implied_audience", "evaluated_audiences"],
             },
             "clarity_assessment": {
                 "type": "string",
@@ -422,7 +390,7 @@ SYNTHESIS_TOOL = {
                     "Detailed clarity assessment FOR EACH AUDIENCE "
                     "(all three standard tiers + additional). "
                     "Evaluate what/why/who clarity with scores."
-                )
+                ),
             },
             "technical_appropriateness": {
                 "type": "string",
@@ -430,7 +398,7 @@ SYNTHESIS_TOOL = {
                     "Technical level appropriateness FOR EACH AUDIENCE "
                     "(all three standard tiers + additional). "
                     "Assess if content level matches audience level with scores."
-                )
+                ),
             },
             "importance_value": {
                 "type": "string",
@@ -438,21 +406,21 @@ SYNTHESIS_TOOL = {
                     "Importance and value assessment FOR EACH AUDIENCE "
                     "(all three standard tiers + additional). "
                     "Evaluate why they should care with scores."
-                )
+                ),
             },
             "voice_personality": {
                 "type": "string",
                 "description": (
                     "Voice and personality assessment (applies to all audiences). "
                     "Distinct voice characteristics and consistency."
-                )
+                ),
             },
             "storytelling_memorability": {
                 "type": "string",
                 "description": (
                     "Storytelling and vividness assessment (applies to all audiences). "
                     "Concrete examples, specificity, memorability."
-                )
+                ),
             },
             "recommendations": {
                 "type": "array",
@@ -466,31 +434,31 @@ SYNTHESIS_TOOL = {
                         "priority": {
                             "type": "string",
                             "enum": ["high", "medium", "low"],
-                            "description": "Priority level for this recommendation"
+                            "description": "Priority level for this recommendation",
                         },
                         "audience": {
                             "type": "string",
-                            "description": "Which audience(s) this recommendation addresses"
+                            "description": "Which audience(s) this recommendation addresses",
                         },
                         "recommendation": {
                             "type": "string",
-                            "description": "The specific recommendation"
+                            "description": "The specific recommendation",
                         },
                         "rationale": {
                             "type": "string",
-                            "description": "Why this recommendation matters"
-                        }
+                            "description": "Why this recommendation matters",
+                        },
                     },
-                    "required": ["priority", "audience", "recommendation", "rationale"]
-                }
+                    "required": ["priority", "audience", "recommendation", "rationale"],
+                },
             },
             "next_steps": {
                 "type": "string",
                 "description": (
                     "Gentle call-to-action for Feedforward AI services "
                     "(not pushy, consultative tone)"
-                )
-            }
+                ),
+            },
         },
         "required": [
             "executive_summary",
@@ -501,7 +469,7 @@ SYNTHESIS_TOOL = {
             "voice_personality",
             "storytelling_memorability",
             "recommendations",
-            "next_steps"
-        ]
-    }
+            "next_steps",
+        ],
+    },
 }
