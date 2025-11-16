@@ -77,7 +77,8 @@ def _render_template(template: str, data: Dict[str, Any]) -> str:
 
     if data.get("storytelling_memorability"):
         html = html.replace(
-            "{{ storytelling_memorability }}", _escape_html(data["storytelling_memorability"])
+            "{{ storytelling_memorability }}",
+            _escape_html(data["storytelling_memorability"]),
         )
     else:
         html = _remove_section(html, "storytelling_memorability")
