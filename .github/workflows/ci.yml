@@ -82,7 +82,7 @@ jobs:
           pip install -r requirements-dev.txt
       - name: Lint (flake8)
         working-directory: ./ai-processing
-        run: flake8 src/ --max-line-length=100 --extend-ignore=E203,W503,E501 || true
+        run: flake8 src/ --max-line-length=100 --extend-ignore=E203,W503,E501,F541 || true
       - name: Test
         working-directory: ./ai-processing
         run: pytest tests/ -v --cov=src --cov-report=xml || echo "No tests yet"

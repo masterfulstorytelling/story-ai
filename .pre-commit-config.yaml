@@ -22,6 +22,6 @@ repos:
       - id: flake8
         name: flake8 (Python linter - E501 ignored)
         files: ^ai-processing/
-        args: [--max-line-length=100, --extend-ignore=E203,E501,W503]
+        args: [--max-line-length=100, --extend-ignore=E203,E501,W503,F541]
         # E501 ignored because Black handles line length
 

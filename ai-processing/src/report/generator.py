@@ -139,7 +139,7 @@ def _render_dict_section(html: str, section_name: str, data: Optional[Dict[str, 
     if isinstance(data, str):
         # Render as simple text instead of dict
         html = html.replace(f"{{% if {section_name} %}}", "")
-        html = html.replace(f"{{% endif %}}", "")
+        html = html.replace("{% endif %}", "")
         pattern = (
             r"\{\% for audience, assessment in "
             + section_name
