@@ -123,17 +123,14 @@ Return the report content as a structured text.
             )
             report_data = {
                 "executive_summary": "Default summary due to missing tool use block",
-                "audience_analysis": {
-                    "implied_audience": "Unknown",
-                    "evaluated_audiences": []
-                },
+                "audience_analysis": {"implied_audience": "Unknown", "evaluated_audiences": []},
                 "clarity_assessment": "No assessment available",
                 "technical_appropriateness": "No assessment available",
                 "importance_value": "No assessment available",
                 "voice_personality": "No assessment available",
                 "storytelling_memorability": "No assessment available",
                 "recommendations": [],
-                "next_steps": "Please contact Feedforward AI for a comprehensive assessment."
+                "next_steps": "Please contact Feedforward AI for a comprehensive assessment.",
             }
         else:
             report_data = tool_use_block.input
@@ -167,16 +164,13 @@ Return the report content as a structured text.
             "timestamp": datetime.now(UTC).isoformat(),
             "report_content": {
                 "executive_summary": "Error generating report. Please try again.",
-                "audience_analysis": {
-                    "implied_audience": "Error",
-                    "evaluated_audiences": []
-                },
+                "audience_analysis": {"implied_audience": "Error", "evaluated_audiences": []},
                 "clarity_assessment": "Error in evaluation",
                 "technical_appropriateness": "Error in evaluation",
                 "importance_value": "Error in evaluation",
                 "voice_personality": "Error in evaluation",
                 "storytelling_memorability": "Error in evaluation",
                 "recommendations": [],
-                "next_steps": "Please try again or contact support."
+                "next_steps": "Please try again or contact support.",
             },
         }
