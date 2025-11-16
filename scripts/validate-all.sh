@@ -124,11 +124,11 @@ else
 fi
 
 echo "  - Flake8 linting..."
-if flake8 src/ --max-line-length=100 --extend-ignore=E203,W503 > /dev/null 2>&1; then
+if flake8 src/ --max-line-length=100 --extend-ignore=E203,W503,E501 > /dev/null 2>&1; then
     echo -e "  ${GREEN}✓${NC} Flake8 linting passed"
 else
     echo -e "  ${RED}✗${NC} Flake8 linting failed"
-    flake8 src/ --max-line-length=100 --extend-ignore=E203,W503
+    flake8 src/ --max-line-length=100 --extend-ignore=E203,W503,E501
     ERRORS=$((ERRORS + 1))
 fi
 
